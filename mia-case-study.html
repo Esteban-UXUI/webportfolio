@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIA — Motor de Inteligencia Artificial | Case Study</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { dark: '#0B0B0C', surface: '#1A1A1D', accent: '#3B82F6', light: '#F8F9FA' },
+                    fontFamily: { syne: ['Syne', 'sans-serif'], inter: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <!-- Librerías Globales UI -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+
+    <style>
+        body { background-color: #0B0B0C; color: #F8F9FA; margin: 0; overflow-x: hidden; }
+        .magnetic-btn { display: inline-flex; cursor: pointer; }
+        #mia-lottie-pos { position: absolute; top: 50%; right: 6%; transform: translateY(-50%); width: 32vw; max-width: 300px; aspect-ratio: 1 / 1; z-index: 0; pointer-events: none; }
+        @media (max-width: 768px) { #mia-lottie-pos { width: 52vw; max-width: 190px; right: 50%; transform: translate(50%, -50%); } }
+        #mia-lottie-wrap {
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 1px solid rgba(59,130,246,0.45);
+            box-shadow: 0 0 40px 8px rgba(59,130,246,0.35), 0 0 100px 25px rgba(59,130,246,0.12), inset 0 0 25px rgba(59,130,246,0.18);
+            animation: glow-pulse 4s ease-in-out infinite;
+        }
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 40px 8px rgba(59,130,246,0.35), 0 0 100px 25px rgba(59,130,246,0.12), inset 0 0 25px rgba(59,130,246,0.18); }
+            50% { box-shadow: 0 0 55px 14px rgba(59,130,246,0.55), 0 0 120px 35px rgba(59,130,246,0.22), inset 0 0 35px rgba(59,130,246,0.3); }
+        }
+        #mia-lottie { width: 100%; height: 100%; }
+        ::-webkit-scrollbar { display: none; }
+
+        .premium-input {
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 0; color: white; font-family: 'Inter', sans-serif; transition: all 0.3s ease;
+        }
+        .premium-input:focus { outline: none; border-bottom-color: #3B82F6; }
+        .premium-input::placeholder { color: rgba(255,255,255,0.4); }
+
+        .blinking-cursor::after { content: '_'; animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Placeholder de imágenes / mockups */
+        .img-placeholder {
+            position: relative;
+            border: 1px dashed rgba(255,255,255,0.18);
+            background: repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 12px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 10px; border-radius: 16px; overflow: hidden; transition: border-color 0.4s ease, background 0.4s ease;
+        }
+        .img-placeholder:hover { border-color: rgba(59,130,246,0.6); background-color: rgba(59,130,246,0.04); }
+        .img-placeholder .ph-icon { width: 34px; height: 34px; opacity: 0.35; }
+        .img-placeholder:hover .ph-icon { opacity: 0.8; }
+        .img-placeholder .ph-label { font-family: 'Inter', sans-serif; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-align: center; padding: 0 24px; }
+        .img-placeholder:hover .ph-label { color: rgba(255,255,255,0.7); }
+        .img-placeholder .ph-tag { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.1em; color: #3B82F6; text-transform: uppercase; }
+
+        .quote-mark { font-family: 'Syne', sans-serif; }
+    </style>
+</head>
+<body class="font-inter selection:bg-accent selection:text-white overflow-hidden">
+
+    <!-- PRELOADER TECNOLÓGICO -->
+    <div id="preloader" class="fixed inset-0 z-[99999] bg-dark flex flex-col items-center justify-center">
+        <div class="w-full max-w-sm px-8">
+            <div class="flex justify-between items-end mb-4 font-syne font-bold">
+                <span class="text-3xl text-white">MIA.</span>
+                <span id="loader-percentage" class="text-5xl text-white leading-none">0%</span>
+            </div>
+            <div class="w-full h-[2px] bg-white/10 overflow-hidden relative">
+                <div id="loader-progress" class="absolute top-0 left-0 h-full bg-accent w-0"></div>
+            </div>
+            <div class="mt-4 text-xs font-inter text-gray-500 uppercase tracking-widest flex justify-between">
+                <span id="loader-text" class="blinking-cursor">Cargando portafolio</span>
+                <span>CASE_STUDY</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="fixed top-0 w-full z-40 flex justify-between items-center px-8 py-6 mix-blend-difference opacity-0" id="header">
+        <a href="index.html" class="font-syne font-bold text-xl tracking-tighter text-white flex items-center gap-3">
+            <span>←</span> Esteban UI
+        </a>
+        <div class="flex items-center gap-3 bg-[#1A1A1D]/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-white">
+            <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+            <span class="text-sm font-medium">Case Study · Proptech</span>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-screen flex flex-col justify-center px-8 md:px-20 overflow-hidden pt-40 pb-20">
+        <div id="mia-lottie-pos">
+            <div id="mia-lottie-wrap">
+                <div id="mia-lottie"></div>
+            </div>
+        </div>
+        <div class="relative z-10 max-w-6xl">
+            <p class="text-xs md:text-sm uppercase tracking-[0.3em] text-gray-500 mb-6 overflow-hidden">
+                <span class="inline-block reveal-text translate-y-[150%]">Case Study · Ciencuadras · Grupo Bolívar · 2023—2025</span>
+            </p>
+            <h1 class="font-syne text-[16vw] md:text-[9vw] leading-none font-extrabold uppercase tracking-tighter mix-blend-difference text-white">
+                <div class="overflow-hidden py-2 -my-2"><span class="inline-block reveal-text translate-y-[150%]">MIA</span></div>
+            </h1>
+            <p class="mt-4 text-lg md:text-2xl text-gray-400 max-w-2xl font-light">
+                <span class="reveal-text inline-block translate-y-[150%] opacity-0">Motor de</span>
+                <span class="text-accent italic font-medium reveal-text inline-block translate-y-[150%] opacity-0">Inteligencia Artificial</span>
+            </p>
+            <p class="mt-8 text-base md:text-lg text-gray-400 max-w-2xl font-light leading-relaxed reveal-text inline-block translate-y-[150%] opacity-0">
+                Cómo diseñé un sistema de hiperpersonalización que conecta automáticamente al comprador correcto con la propiedad correcta — antes de que él mismo sepa que la está buscando.
+            </p>
+
+            <!-- Meta grid -->
+            <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 border-t border-white/10 pt-8 max-w-4xl about-text">
+                <div>
+                    <span class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">Mi rol</span>
+                    <span class="font-syne text-lg font-bold text-white">Lead UX/UI Designer</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">Empresa</span>
+                    <span class="font-syne text-lg font-bold text-white">Imaginamos · Ciencuadras</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">Duración</span>
+                    <span class="font-syne text-lg font-bold text-white">2 años</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">Equipo</span>
+                    <span class="font-syne text-lg font-bold text-white">+10 personas</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- COVER MOCKUP -->
+    <section class="px-8 md:px-20 pb-10 relative z-10">
+        <div class="max-w-7xl mx-auto img-placeholder h-[50vh] md:h-[85vh] project-card overflow-hidden relative">
+            <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781719492/Portada_ojmu6g.jpg" alt="Cover mockup de MIA" class="absolute inset-0 w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+            <div class="absolute bottom-6 left-6 z-10">
+                <span class="ph-tag">Cover / Hero</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- KPIs -->
+    <section class="py-20 px-8 md:px-20 bg-surface relative z-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 kpi-row">
+            <div class="border-t border-white/10 pt-6">
+                <span class="block font-syne text-4xl md:text-6xl font-extrabold text-accent">+70%</span>
+                <span class="text-xs md:text-sm text-gray-500 uppercase tracking-widest">Leads efectivos</span>
+            </div>
+            <div class="border-t border-white/10 pt-6">
+                <span class="block font-syne text-4xl md:text-6xl font-extrabold text-white">1st</span>
+                <span class="text-xs md:text-sm text-gray-500 uppercase tracking-widest">Venta por IA · Grupo Bolívar</span>
+            </div>
+            <div class="border-t border-white/10 pt-6">
+                <span class="block font-syne text-4xl md:text-6xl font-extrabold text-white">15k+</span>
+                <span class="text-xs md:text-sm text-gray-500 uppercase tracking-widest">Usuarios activos</span>
+            </div>
+            <div class="border-t border-white/10 pt-6">
+                <span class="block font-syne text-4xl md:text-6xl font-extrabold text-accent">85%</span>
+                <span class="text-xs md:text-sm text-gray-500 uppercase tracking-widest">Mejora contacto vendedor</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 01 CONTEXTO Y PROBLEMA -->
+    <section class="py-32 px-8 md:px-20 bg-dark relative z-10" id="contexto">
+        <div class="max-w-7xl mx-auto">
+            <span class="text-accent font-syne font-bold text-sm tracking-widest">01 · CONTEXTO Y PROBLEMA</span>
+            <h2 class="font-syne text-3xl md:text-5xl font-bold mt-4 mb-10 max-w-3xl leading-tight about-text">
+                Una plataforma con mucho tráfico y pocas ventas reales
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+                <div class="space-y-6 about-text">
+                    <p class="text-gray-400 text-lg font-light leading-relaxed">
+                        Ciencuadras es la plataforma inmobiliaria del Grupo Bolívar — uno de los grupos empresariales más grandes de Colombia con más de 80 años de historia. Tenían un problema que no era visible en el dashboard: muchísimo tráfico, muchos leads, pero muy pocas conversiones reales.
+                    </p>
+                    <p class="text-gray-400 text-lg font-light leading-relaxed">
+                        El buscador tradicional mostraba propiedades por filtros genéricos — precio, zona, metros cuadrados — sin entender quién era realmente el usuario ni en qué momento de su vida estaba. El resultado: usuarios que buscaban repetidamente sin encontrar, y leads que llegaban al equipo comercial sin intención real de compra.
+                    </p>
+                    <p class="text-gray-400 text-lg font-light leading-relaxed">
+                        La dirección del Grupo Bolívar tomó una decisión estratégica: incorporar inteligencia artificial como ventaja competitiva real. No como experimento — como producto. Yo entré a liderar la estrategia de diseño de inicio a fin.
+                    </p>
+                </div>
+                <div class="img-placeholder h-[400px] about-img overflow-hidden relative">
+                    <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784677831/Home_antiguo_kofsgh.webp" alt="Buscador tradicional de Ciencuadras" class="absolute inset-0 w-full h-full object-cover" />
+                    <div class="absolute bottom-4 left-4 z-10">
+                        <span class="ph-tag">Screen · Antes</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problemas -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20">
+                <div class="p-8 rounded-2xl bg-surface border border-white/5 problem-card">
+                    <span class="text-xs font-syne font-bold text-accent tracking-widest">PROBLEMA 01</span>
+                    <h3 class="font-syne text-xl font-bold mt-4 mb-3">Búsquedas sin conversión</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Los usuarios buscaban repetidamente sin avanzar en el funnel. El sistema no aprendía de su comportamiento.</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mt-4">↑ Rebote alto en resultados</p>
+                </div>
+                <div class="p-8 rounded-2xl bg-surface border border-white/5 problem-card">
+                    <span class="text-xs font-syne font-bold text-accent tracking-widest">PROBLEMA 02</span>
+                    <h3 class="font-syne text-xl font-bold mt-4 mb-3">Abandono antes del contacto</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Los usuarios llegaban al punto de contactar al vendedor y se iban. El momento de mayor valor era el más frágil.</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mt-4">↓ Tasa de contacto con vendedor</p>
+                </div>
+                <div class="p-8 rounded-2xl bg-surface border border-white/5 problem-card">
+                    <span class="text-xs font-syne font-bold text-accent tracking-widest">PROBLEMA 03</span>
+                    <h3 class="font-syne text-xl font-bold mt-4 mb-3">Leads sin calidad real</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">El equipo comercial recibía contactos sin intención real de compra, desperdiciando tiempo y recursos.</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest mt-4">↑ Costo por adquisición</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 02 DISCOVERY & RESEARCH -->
+    <section class="py-32 px-8 md:px-20 bg-surface relative z-10" id="research">
+        <div class="max-w-7xl mx-auto">
+            <span class="text-accent font-syne font-bold text-sm tracking-widest">02 · DISCOVERY & RESEARCH</span>
+            <h2 class="font-syne text-3xl md:text-5xl font-bold mt-4 mb-16 max-w-3xl leading-tight about-text">
+                Entender antes de diseñar
+            </h2>
+            <p class="text-gray-400 text-lg font-light leading-relaxed max-w-3xl mb-16 about-text">
+                Antes de abrir Figma, pasé semanas entendiendo el problema desde cuatro ángulos distintos. El reto más grande no era técnico — era humano: alinear a un equipo de más de diez personas con visiones muy distintas sobre qué debía ser MIA.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+                <div class="p-8 border-l-2 border-accent problem-card">
+                    <span class="font-syne text-2xl font-bold text-white/30">01</span>
+                    <h3 class="font-syne text-xl font-bold mt-2 mb-3">Entrevistas con usuarios</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Conversaciones profundas con compradores reales para entender su proceso de decisión, sus miedos y sus patrones de búsqueda. Descubrí que el problema no era la falta de oferta — era la falta de relevancia.</p>
+                </div>
+                <div class="p-8 border-l-2 border-accent problem-card">
+                    <span class="font-syne text-2xl font-bold text-white/30">02</span>
+                    <h3 class="font-syne text-xl font-bold mt-2 mb-3">Análisis de comportamiento</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Usé Google Analytics y Microsoft Clarity para mapear heatmaps, sesiones y puntos de abandono. Los datos revelaron dónde exactamente el usuario perdía confianza en el sistema.</p>
+                </div>
+                <div class="p-8 border-l-2 border-accent problem-card">
+                    <span class="font-syne text-2xl font-bold text-white/30">03</span>
+                    <h3 class="font-syne text-xl font-bold mt-2 mb-3">Benchmark competitivo</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Analicé referentes internacionales de proptech con IA — Zillow, Idealista, Properati — para entender cómo otros habían resuelto el problema de personalización en real estate.</p>
+                </div>
+                <div class="p-8 border-l-2 border-accent problem-card">
+                    <span class="font-syne text-2xl font-bold text-white/30">04</span>
+                    <h3 class="font-syne text-xl font-bold mt-2 mb-3">Talleres con stakeholders</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Facilité sesiones de alineación con producto, data science, ingeniería y negocio. El mayor insight no vino de los datos — vino de entender qué quería cada equipo y dónde chocaban esas visiones.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                <div class="img-placeholder h-[320px] about-img overflow-hidden relative">
+                    <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784680845/anan%CC%83ytics_o1klwe.webp" alt="Heatmaps y sesiones de Microsoft Clarity / Google Analytics" class="absolute inset-0 w-full h-full object-cover" />
+                    <div class="absolute bottom-4 left-4 z-10">
+                        <span class="ph-tag">Anlytics tags  </span>
+                    </div>
+                </div>
+                <div class="img-placeholder h-[320px] about-img overflow-hidden relative">
+                    <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784680845/Bench_afha4c.webp" alt="Comparativo Zillow · Idealista · Properati" class="absolute inset-0 w-full h-full object-cover" />
+                    <div class="absolute bottom-4 left-4 z-10">
+                        <span class="ph-tag">Benchmark</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hallazgos clave -->
+            <h3 class="font-syne text-2xl font-bold mb-8">Hallazgos clave</h3>
+            <div class="grid grid-cols-1 gap-4">
+                <div class="p-6 md:p-8 rounded-2xl bg-dark border border-white/5 grid grid-cols-1 md:grid-cols-4 gap-4 items-start problem-card">
+                    <span class="text-xs font-syne font-bold text-accent tracking-widest">CUANTITATIVO</span>
+                    <div class="md:col-span-3">
+                        <h4 class="font-syne text-lg font-bold mb-2">El buscador generaba ilusión de actividad, no conversión</h4>
+                        <p class="text-gray-400 text-sm font-light leading-relaxed">Alta tasa de rebote y sesiones cortas indicaban que los usuarios llegaban, no encontraban lo relevante y se iban — generando volumen de tráfico sin valor real para el negocio.</p>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 rounded-2xl bg-dark border border-white/5 grid grid-cols-1 md:grid-cols-4 gap-4 items-start problem-card">
+                    <span class="text-xs font-syne font-bold text-accent tracking-widest">CUALITATIVO</span>
+                    <div class="md:col-span-3">
+                        <h4 class="font-syne text-lg font-bold mb-2">Las propiedades no coincidían con el perfil real del usuario</h4>
+                        <p class="text-gray-400 text-sm font-light leading-relaxed">Los usuarios reportaban que las recomendaciones no tenían relación con lo que buscaban. Querían más control — no porque les gustara filtrar, sino porque el sistema no demostraba que los entendía.</p>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 rounded-2xl bg-dark border border-white/5 grid grid-cols-1 md:grid-cols-4 gap-4 items-start problem-card">
+                    <span class="text-xs font-syne font-bold text-accent tracking-widest">CUANT. + CUAL.</span>
+                    <div class="md:col-span-3">
+                        <h4 class="font-syne text-lg font-bold mb-2">El abandono ocurría justo antes de la conversión</h4>
+                        <p class="text-gray-400 text-sm font-light leading-relaxed">El análisis de Clarity mostró que los usuarios abandonaban en el paso de contactar al vendedor. No era falta de interés — era falta de confianza y contexto para actuar.</p>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 rounded-2xl bg-dark border border-white/5 grid grid-cols-1 md:grid-cols-4 gap-4 items-start problem-card">
+                    <span class="text-xs font-syne font-bold text-accent tracking-widest">ESTRATÉGICO</span>
+                    <div class="md:col-span-3">
+                        <h4 class="font-syne text-lg font-bold mb-2">El mayor reto era alinear tres visiones distintas</h4>
+                        <p class="text-gray-400 text-sm font-light leading-relaxed">El negocio quería conversión. Tecnología quería precisión del modelo. Los usuarios querían simplicidad. Mi trabajo fue encontrar el punto donde esas tres cosas convergían.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 03 DEFINICIÓN DEL PROBLEMA -->
+    <section class="py-32 px-8 md:px-20 bg-dark relative z-10" id="definicion">
+        <div class="max-w-5xl mx-auto text-center">
+            <span class="text-accent font-syne font-bold text-sm tracking-widest">03 · DEFINICIÓN DEL PROBLEMA</span>
+            <p class="quote-mark font-syne text-2xl md:text-4xl font-bold leading-snug mt-8 mb-16 about-text">
+                “¿Cómo podemos conectar automáticamente al usuario correcto con la propiedad correcta, antes de que él mismo sepa que la está buscando?”
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 text-left mt-16">
+                <div class="about-text">
+                    <h3 class="font-syne text-xl font-bold mb-4 text-white">OKR principal</h3>
+                    <p class="text-gray-400 font-light leading-relaxed">Aumentar la tasa de leads efectivos mediante hiperpersonalización basada en IA — midiendo cada decisión de diseño contra métricas reales de conversión.</p>
+                </div>
+                <div class="about-text">
+                    <h3 class="font-syne text-xl font-bold mb-4 text-white">Criterios de éxito</h3>
+                    <ul class="text-gray-400 font-light leading-relaxed space-y-2 list-disc list-inside">
+                        <li>Aumentar leads efectivos en el primer año</li>
+                        <li>Reducir tiempo de decisión del usuario</li>
+                        <li>Habilitar la primera venta gestionada por IA</li>
+                        <li>Mejorar la calidad del lead para el equipo comercial</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 04 ESTRATEGIA & SOLUCIÓN -->
+    <section class="py-32 px-8 md:px-20 bg-surface relative z-10" id="solucion">
+        <div class="max-w-7xl mx-auto">
+            <span class="text-accent font-syne font-bold text-sm tracking-widest">04 · ESTRATEGIA & SOLUCIÓN</span>
+            <h2 class="font-syne text-3xl md:text-5xl font-bold mt-4 mb-10 max-w-3xl leading-tight about-text">
+                Hacer invisible la complejidad
+            </h2>
+            <p class="text-gray-400 text-lg font-light leading-relaxed max-w-3xl mb-12 about-text">
+                La clave del diseño de MIA fue una decisión contraintuitiva: cuanto más inteligente fuera el sistema, menos lo debería notar el usuario. La IA trabaja en el fondo — el usuario solo ve recomendaciones que sienten relevantes, en el momento correcto, con el contexto adecuado para decidir.
+            </p>
+
+            <div class="p-10 md:p-16 rounded-2xl bg-dark border border-white/5 mb-16 about-img">
+                <p class="quote-mark text-2xl md:text-3xl font-bold text-accent italic">La IA no se muestra — se siente.</p>
+                <p class="text-gray-400 font-light leading-relaxed mt-6 max-w-2xl">Diseñé una experiencia donde el usuario nunca ve un algoritmo. Ve propiedades que parecen haber sido elegidas para él. La confianza se construye con relevancia, no con explicaciones técnicas.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="problem-card">
+                    <h3 class="font-syne text-lg font-bold mb-3 text-white">Hiperpersonalización con retargeting dinámico</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed mb-6">El sistema aprende del comportamiento del usuario en tiempo real — qué ve, cuánto tiempo se detiene, qué ignora — y ajusta las recomendaciones de forma continua sin que el usuario lo configure manualmente.</p>
+                    <div class="img-placeholder h-[260px] about-img overflow-hidden relative">
+                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784683338/Hiperpersonalizacio%CC%81n_con_retargeting_dina%CC%81mico_ffiaox.webp" alt="Feed de recomendaciones personalizadas" class="absolute inset-0 w-full h-full object-cover" />
+                        <div class="absolute bottom-4 left-4 z-10">
+                            <span class="ph-tag">Screen</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="problem-card">
+                    <h3 class="font-syne text-lg font-bold mb-3 text-white">Eliminación de fricción en el contacto</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed mb-6">Rediseñé el flujo de contacto con el vendedor — el punto de mayor abandono identificado en el research — simplificando el proceso y agregando contexto relevante para llegar con confianza a ese momento.</p>
+                    <div class="img-placeholder h-[260px] about-img overflow-hidden relative">
+                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784683334/Eliminacio%CC%81n_de_friccio%CC%81n_en_el_contacto_bzxrrq.webp" alt="Nuevo flujo de contacto con vendedor" class="absolute inset-0 w-full h-full object-cover" />
+                        <div class="absolute bottom-4 left-4 z-10">
+                            <span class="ph-tag">Screen</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="problem-card">
+                    <h3 class="font-syne text-lg font-bold mb-3 text-white">Enfoque basado en datos</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed mb-6">Google Analytics y Microsoft Clarity fueron mis aliados en cada sprint. Ningún cambio avanzaba sin respaldo en datos: tasa de leads, conversión, rebote, retención y tiempo en sesión.</p>
+                    <div class="img-placeholder h-[260px] about-img overflow-hidden relative">
+                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784683327/Enfoque_basado_en_datos_reryrz.webp" alt="Dashboard de métricas por sprint" class="absolute inset-0 w-full h-full object-cover" />
+                        <div class="absolute bottom-4 left-4 z-10">
+                            <span class="ph-tag">Data</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 05 PROCESO DE DISEÑO -->
+    <section class="py-32 px-8 md:px-20 bg-dark relative z-10" id="proceso">
+        <div class="max-w-7xl mx-auto">
+            <span class="text-accent font-syne font-bold text-sm tracking-widest">05 · PROCESO DE DISEÑO</span>
+            <h2 class="font-syne text-3xl md:text-5xl font-bold mt-4 mb-20 max-w-3xl leading-tight about-text">
+                Del insight al producto
+            </h2>
+
+            <div class="flex flex-col gap-24">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center project-card">
+                    <div>
+                        <span class="font-syne text-6xl font-extrabold text-white/10">01</span>
+                        <span class="block text-xs font-syne font-bold text-accent tracking-widest mt-2">EXPLORACIÓN CONCEPTUAL</span>
+                        <h3 class="font-syne text-2xl font-bold mt-2 mb-4">Arquitectura de la experiencia</h3>
+                        <p class="text-gray-400 font-light leading-relaxed">Definí los flujos principales de MIA: cómo el sistema recibe información del usuario, cómo la procesa y cómo la presenta sin exponer la lógica algorítmica.</p>
+                    </div>
+                    <div class="img-placeholder h-[320px] about-img">
+                        <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+                        <span class="ph-tag">Mapa de flujo</span>
+                        <span class="ph-label">Arquitectura de la experiencia / User flow</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center project-card">
+                    <div class="img-placeholder h-[320px] about-img md:order-1 order-2">
+                        <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="3 3"/></svg>
+                        <span class="ph-tag">Wireframes</span>
+                        <span class="ph-label">Baja y media fidelidad</span>
+                    </div>
+                    <div class="md:order-2 order-1">
+                        <span class="font-syne text-6xl font-extrabold text-white/10">02</span>
+                        <span class="block text-xs font-syne font-bold text-accent tracking-widest mt-2">WIREFRAMING</span>
+                        <h3 class="font-syne text-2xl font-bold mt-2 mb-4">Estructura antes que estética</h3>
+                        <p class="text-gray-400 font-light leading-relaxed">Diseñé wireframes de baja y media fidelidad para validar la lógica de interacción con producto y tecnología antes de invertir en diseño visual.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center project-card">
+                    <div>
+                        <span class="font-syne text-6xl font-extrabold text-white/10">03</span>
+                        <span class="block text-xs font-syne font-bold text-accent tracking-widest mt-2">PROTOTIPADO</span>
+                        <h3 class="font-syne text-2xl font-bold mt-2 mb-4">Alta fidelidad navegable</h3>
+                        <p class="text-gray-400 font-light leading-relaxed">Construí prototipos navegables en Figma con el flujo completo — desde la búsqueda inicial hasta el contacto con el vendedor — para pruebas reales con usuarios.</p>
+                    </div>
+                    <div class="img-placeholder h-[320px] about-img">
+                        <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/></svg>
+                        <span class="ph-tag">Prototipo</span>
+                        <span class="ph-label">Prototipo navegable de alta fidelidad — Figma</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center project-card">
+                    <div class="img-placeholder h-[320px] about-img md:order-1 order-2">
+                        <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 4v6l4 2"/><circle cx="12" cy="12" r="9"/></svg>
+                        <span class="ph-tag">Testing</span>
+                        <span class="ph-label">Sesiones de validación con usuarios</span>
+                    </div>
+                    <div class="md:order-2 order-1">
+                        <span class="font-syne text-6xl font-extrabold text-white/10">04</span>
+                        <span class="block text-xs font-syne font-bold text-accent tracking-widest mt-2">TESTING</span>
+                        <h3 class="font-syne text-2xl font-bold mt-2 mb-4">Dos rondas de validación</h3>
+                        <p class="text-gray-400 font-light leading-relaxed">Probé con usuarios reales en dos rondas. El hallazgo más importante: MIA necesitaba menos datos técnicos y más contexto de decisión en las recomendaciones.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center project-card">
+                    <div>
+                        <span class="font-syne text-6xl font-extrabold text-white/10">05</span>
+                        <span class="block text-xs font-syne font-bold text-accent tracking-widest mt-2">HANDOFF & QA</span>
+                        <h3 class="font-syne text-2xl font-bold mt-2 mb-4">Implementación sin pérdida de calidad</h3>
+                        <p class="text-gray-400 font-light leading-relaxed">Trabajé codo a codo con desarrollo en la implementación, validando cada componente en QA para asegurar que la experiencia diseñada fuera la experiencia entregada.</p>
+                    </div>
+                    <div class="img-placeholder h-[320px] about-img">
+                        <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                        <span class="ph-tag">QA</span>
+                        <span class="ph-label">Pantallas finales validadas en producción</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 06 RESULTADOS -->
+    <section class="py-32 px-8 md:px-20 bg-surface relative z-10" id="resultados">
+        <div class="max-w-7xl mx-auto">
+            <span class="text-accent font-syne font-bold text-sm tracking-widest">06 · RESULTADOS</span>
+            <h2 class="font-syne text-3xl md:text-5xl font-bold mt-4 mb-16 max-w-3xl leading-tight about-text">
+                Números que transformaron el negocio
+            </h2>
+            <p class="text-gray-400 text-lg font-light leading-relaxed max-w-3xl mb-16 about-text">
+                MIA no fue solo un rediseño — fue la primera vez que el Grupo Bolívar cerraba ventas gestionadas íntegramente por inteligencia artificial. Estos son los resultados del primer año.
+            </p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
+                <div class="border-t border-white/10 pt-6 about-text">
+                    <span class="block font-syne text-4xl md:text-6xl font-extrabold text-accent">+70%</span>
+                    <span class="text-xs md:text-sm text-gray-500 uppercase tracking-widest">Leads efectivos · 1er año</span>
+                </div>
+                <div class="border-t border-white/10 pt-6 about-text">
+                    <span class="block font-syne text-4xl md:text-6xl font-extrabold text-white">1st</span>
+                    <span class="text-xs md:text-sm text-gray-500 uppercase tracking-widest">Ventas cerradas por IA</span>
+                </div>
+                <div class="border-t border-white/10 pt-6 about-text">
+                    <span class="block font-syne text-4xl md:text-6xl font-extrabold text-white">15k+</span>
+                    <span class="text-xs md:text-sm text-gray-500 uppercase tracking-widest">Usuarios post-lanzamiento</span>
+                </div>
+                <div class="border-t border-white/10 pt-6 about-text">
+                    <span class="block font-syne text-4xl md:text-6xl font-extrabold text-accent">85%</span>
+                    <span class="text-xs md:text-sm text-gray-500 uppercase tracking-widest">Mejora tasa de contacto</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <ul class="text-gray-400 font-light leading-relaxed space-y-4 about-text">
+                    <li>↑ Tiempo en sesión — los usuarios exploraban más cuando las recomendaciones eran relevantes</li>
+                    <li>↑ Retención — los usuarios volvían más veces; MIA construyó hábito de uso</li>
+                    <li>↓ Tasa de rebote — menos usuarios salían sin interactuar con las recomendaciones</li>
+                    <li>↑ Calidad del lead — el equipo comercial recibía contactos con mayor intención real de compra</li>
+                </ul>
+                <div class="img-placeholder h-[380px] about-img">
+                    <svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 2 5-6"/></svg>
+                    <span class="ph-tag">Dashboard</span>
+                    <span class="ph-label">Panel de resultados post-lanzamiento</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 07 APRENDIZAJES -->
+    <section class="py-32 px-8 md:px-20 bg-dark relative z-10" id="aprendizajes">
+        <div class="max-w-7xl mx-auto">
+            <span class="text-accent font-syne font-bold text-sm tracking-widest">07 · APRENDIZAJES</span>
+            <h2 class="font-syne text-3xl md:text-5xl font-bold mt-4 mb-16 max-w-3xl leading-tight about-text">
+                Lo que me llevé del proyecto
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-2xl bg-surface border border-white/5 problem-card">
+                    <span class="text-xs font-syne font-bold text-accent tracking-widest">INSIGHT 01</span>
+                    <h3 class="font-syne text-xl font-bold mt-4 mb-3">Diseñar para IA es diseñar confianza</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">El reto no fue técnico — fue emocional. El usuario necesita confiar en que el sistema lo entiende antes de actuar. La relevancia es la única forma de construir esa confianza.</p>
+                </div>
+                <div class="p-8 rounded-2xl bg-surface border border-white/5 problem-card">
+                    <span class="text-xs font-syne font-bold text-accent tracking-widest">INSIGHT 02</span>
+                    <h3 class="font-syne text-xl font-bold mt-4 mb-3">La alineación es parte del diseño</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Facilitar conversaciones entre negocio, tecnología y usuarios no fue una tarea periférica — fue el trabajo de diseño más importante del proyecto.</p>
+                </div>
+                <div class="p-8 rounded-2xl bg-surface border border-white/5 problem-card">
+                    <span class="text-xs font-syne font-bold text-accent tracking-widest">INSIGHT 03</span>
+                    <h3 class="font-syne text-xl font-bold mt-4 mb-3">Los datos validan, no reemplazan el criterio</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Usé Analytics y Clarity en cada iteración, pero los datos me decían qué pasaba — no por qué. El por qué siempre vino de hablar con usuarios reales.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER CTA -->
+    <footer class="relative min-h-screen flex flex-col items-center justify-center bg-dark overflow-hidden py-20 px-8">
+        <div class="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+
+        <p class="text-gray-500 uppercase tracking-widest text-sm mb-8 text-center">¿Quieres ver más proyectos o conversar sobre este caso?</p>
+
+        <div class="magnetic-btn relative z-10 text-center group" id="open-contact">
+            <h2 class="font-syne text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter text-white group-hover:text-accent transition-colors duration-500">
+                LET'S TALK
+            </h2>
+            <p class="mt-6 text-gray-400 uppercase tracking-widest text-sm">Click para escribirme</p>
+        </div>
+
+        <div class="mt-16 flex flex-col md:flex-row gap-3 md:gap-10 text-gray-400 text-sm">
+            <span>esteban.ui.ux@gmail.com</span>
+            <span>estebanui.com</span>
+            <span>+57 319 2472614</span>
+        </div>
+
+        <div class="absolute bottom-10 w-full flex justify-between px-8 md:px-20 text-sm text-gray-500">
+            <span>© 2026 Esteban Chitiva.</span>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-white transition-colors">Twitter</a>
+                <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL DE CONTACTO -->
+    <div id="contact-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center">
+        <div class="absolute inset-0 bg-[#0B0B0C]/90 backdrop-blur-xl opacity-0" id="modal-bg"></div>
+        <div class="relative z-10 w-full max-w-3xl px-8 opacity-0 translate-y-10" id="modal-content">
+            <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-6">
+                <h2 class="font-syne text-4xl font-bold text-white">Nuevos Proyectos</h2>
+                <button id="close-contact" class="text-gray-400 hover:text-white text-5xl font-light transition-colors">&times;</button>
+            </div>
+
+            <form class="space-y-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="form-input-anim">
+                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Nombre completo</label>
+                        <input type="text" placeholder="John Doe" class="premium-input">
+                    </div>
+                    <div class="form-input-anim">
+                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Email</label>
+                        <input type="email" placeholder="john@company.com" class="premium-input">
+                    </div>
+                    <div class="form-input-anim">
+                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Teléfono</label>
+                        <input type="tel" placeholder="+1 (555) 000-0000" class="premium-input">
+                    </div>
+                    <div class="form-input-anim">
+                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Asunto / Presupuesto</label>
+                        <input type="text" placeholder="Diseño de App / $10k+" class="premium-input">
+                    </div>
+                </div>
+                <div class="pt-8 flex justify-end form-input-anim">
+                    <button type="button" class="px-10 py-5 bg-white text-dark rounded-full font-syne font-bold hover:bg-accent hover:text-white transition-colors duration-300 uppercase tracking-widest text-sm">
+                        Enviar Mensaje
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPT 1: LOADER & INTERFAZ -->
+    <script>
+        const lenis = new Lenis({ lerp: 0.05, smoothWheel: true });
+        lenis.stop();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- LÓGICA DEL PRELOADER ---
+        const tlLoader = gsap.timeline();
+        let counter = { value: 0 };
+        const loadingTexts = ["INITIALIZING SYSTEM", "LOADING CASE STUDY", "RENDERING SCREENS", "READY"];
+        let textIndex = 0;
+
+        const textInterval = setInterval(() => {
+            textIndex++;
+            if(textIndex < loadingTexts.length) {
+                document.getElementById('loader-text').innerText = loadingTexts[textIndex];
+            }
+        }, 500);
+
+        tlLoader.to(counter, {
+            value: 100,
+            duration: 2.5,
+            ease: "power2.inOut",
+            onUpdate: () => {
+                document.getElementById('loader-percentage').innerText = Math.round(counter.value) + '%';
+            }
+        }, 0)
+        .to("#loader-progress", { width: "100%", duration: 2.5, ease: "power2.inOut" }, 0)
+        .to("#preloader", {
+            yPercent: -100,
+            duration: 1,
+            ease: "expo.inOut",
+            delay: 0.2,
+            onComplete: () => {
+                clearInterval(textInterval);
+                document.body.classList.remove('overflow-hidden');
+                lenis.start();
+            }
+        })
+        .to("#header", { opacity: 1, duration: 1, ease: "power2.out" }, "-=0.5")
+        .fromTo(".reveal-text",
+            { y: "150%", opacity: 0, clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)" },
+            { y: "0%", opacity: 1, clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", stagger: 0.1, duration: 1.2, ease: "power4.out" },
+            "-=0.8"
+        );
+
+        // --- ANIMACIONES DE SCROLL ---
+        gsap.utils.toArray(".about-text").forEach(el => {
+            gsap.from(el, { scrollTrigger: { trigger: el, start: "top 85%" }, y: 40, opacity: 0, duration: 0.9, ease: "power3.out" });
+        });
+
+        gsap.utils.toArray(".about-img").forEach(el => {
+            gsap.fromTo(el, { clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)" }, { scrollTrigger: { trigger: el, start: "top 85%" }, clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", duration: 1.3, ease: "power4.inOut" });
+        });
+
+        gsap.utils.toArray('.project-card, .problem-card').forEach(card => {
+            gsap.from(card, { scrollTrigger: { trigger: card, start: "top 88%" }, y: 60, opacity: 0, duration: 0.9, ease: "power3.out" });
+        });
+
+        // --- BOTONES MAGNÉTICOS ---
+        document.querySelectorAll('.magnetic-btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                gsap.to(btn, { x: (e.clientX - rect.left - rect.width / 2) * 0.3, y: (e.clientY - rect.top - rect.height / 2) * 0.3, duration: 1, ease: "elastic.out(1, 0.3)" });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.3)" });
+            });
+        });
+
+        // --- LÓGICA DEL MODAL ---
+        const modal = document.getElementById('contact-modal');
+        const openBtn = document.getElementById('open-contact');
+        const closeBtn = document.getElementById('close-contact');
+
+        openBtn.addEventListener('click', () => {
+            lenis.stop();
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            gsap.to("#modal-bg", { opacity: 1, duration: 0.4, ease: "power2.out" });
+            gsap.to("#modal-content", { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", delay: 0.1 });
+            gsap.fromTo(".form-input-anim", { y: 20, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.1, duration: 0.4, ease: "power2.out", delay: 0.3 });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            gsap.to("#modal-content", { y: 30, opacity: 0, duration: 0.4, ease: "power2.in" });
+            gsap.to("#modal-bg", { opacity: 0, duration: 0.4, ease: "power2.in", delay: 0.2, onComplete: () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                lenis.start();
+            }});
+        });
+    </script>
+
+    <!-- SCRIPT 2: LOTTIE (Elemento gráfico del hero) -->
+    <script>
+        try {
+            lottie.loadAnimation({
+                container: document.getElementById('mia-lottie'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'files/mia-animation.json'
+            });
+
+            // Seguimiento del cursor (misma sensación del elemento 3D anterior)
+            const lottieWrap = document.getElementById('mia-lottie-wrap');
+            document.addEventListener('mousemove', (e) => {
+                const mx = (e.clientX / window.innerWidth) * 2 - 1;
+                const my = (e.clientY / window.innerHeight) * 2 - 1;
+                gsap.to(lottieWrap, { x: mx * 26, y: my * 26, duration: 1.4, ease: "power3.out" });
+            });
+        } catch (err) {
+            console.warn("Lottie alert:", err);
+        }
+    </script>
+</body>
+</html>
