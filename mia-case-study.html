@@ -67,6 +67,21 @@
         .img-placeholder:hover .ph-label { color: rgba(255,255,255,0.7); }
         .img-placeholder .ph-tag { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.1em; color: #3B82F6; text-transform: uppercase; }
 
+        .img-placeholder img,
+        .img-placeholder video {
+            object-fit: cover;
+            object-position: center;
+        }
+
+        @media (max-width: 768px) {
+            .img-placeholder img,
+            .img-placeholder video {
+                object-fit: contain;
+                object-position: center;
+                background-color: rgba(0,0,0,0.25);
+            }
+        }
+
         .quote-mark { font-family: 'Syne', sans-serif; }
     </style>
 </head>
@@ -147,7 +162,15 @@
     <!-- COVER MOCKUP -->
     <section class="px-8 md:px-20 pb-10 relative z-10">
         <div class="max-w-7xl mx-auto img-placeholder h-[50vh] md:h-[85vh] project-card overflow-hidden relative">
-            <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781719492/Portada_ojmu6g.jpg" alt="Cover mockup de MIA" class="absolute inset-0 w-full h-full object-cover" />
+            <video
+                src="https://res.cloudinary.com/dsbdjteyj/video/upload/v1784696164/Screen_Recording_2026-07-17_at_10.51.14_AM_d8ooel.webm"
+                loop
+                playsinline
+                controls
+                preload="metadata"
+                class="absolute inset-0 w-full h-full object-cover"
+                aria-label="Video de presentación del caso de estudio MIA"
+            ></video>
             <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
             <div class="absolute bottom-6 left-6 z-10">
                 <span class="ph-tag">Cover / Hero</span>
