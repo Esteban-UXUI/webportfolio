@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Esteban UIr</title>
+    <title>Portfolio | Esteban UI</title>
     
+    <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784700608/Favicon_mt8w4m.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -41,6 +42,10 @@
         }
         .premium-input:focus { outline: none; border-bottom-color: #8B5CF6; }
         .premium-input::placeholder { color: rgba(255,255,255,0.4); }
+        
+        /* Transición del header glass */
+        header { transition: background 0.5s ease, backdrop-filter 0.5s ease, border-bottom 0.5s ease, mix-blend-mode 0.5s ease; }
+        header.header-glass { background: rgba(11, 11, 12, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); mix-blend-mode: normal; }
         
         /* Cursor animado para el loader */
         .blinking-cursor::after { content: '_'; animation: blink 1s step-end infinite; }
@@ -347,6 +352,18 @@
             { y: "0%", opacity: 1, clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", stagger: 0.1, duration: 1.2, ease: "power4.out" },
             "-=0.8"
         );
+
+        // --- HEADER GLASS EFFECT ---
+        function updateHeaderGlass() {
+            const header = document.getElementById('header');
+            if (window.scrollY > window.innerHeight * 0.8) {
+                header.classList.add('header-glass');
+            } else {
+                header.classList.remove('header-glass');
+            }
+        }
+        window.addEventListener('scroll', updateHeaderGlass, { passive: true });
+        updateHeaderGlass();
 
         // --- ANIMACIONES DE SCROLL ---
         gsap.from(".about-text > *", { scrollTrigger: { trigger: "#about", start: "top 75%" }, y: 50, opacity: 0, stagger: 0.2, duration: 1, ease: "power3.out" });

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MIA — Motor de Inteligencia Artificial | Case Study</title>
 
+    <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784700608/Favicon_mt8w4m.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -28,7 +29,7 @@
         body { background-color: #0B0B0C; color: #F8F9FA; margin: 0; overflow-x: hidden; }
         .magnetic-btn { display: inline-flex; cursor: pointer; }
         #mia-lottie-pos { position: absolute; top: 50%; right: 6%; transform: translateY(-50%); width: 32vw; max-width: 300px; aspect-ratio: 1 / 1; z-index: 0; pointer-events: none; }
-        @media (max-width: 768px) { #mia-lottie-pos { width: 52vw; max-width: 190px; right: 50%; transform: translate(50%, -50%); } }
+        @media (max-width: 768px) { #mia-lottie-pos { width: 52vw; max-width: 190px; right: 50%; transform: translate(50%, -50%); opacity: 0.5; } }
         #mia-lottie-wrap {
             width: 100%; height: 100%; border-radius: 50%;
             border: 1px solid rgba(59,130,246,0.45);
@@ -51,6 +52,10 @@
 
         .blinking-cursor::after { content: '_'; animation: blink 1s step-end infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Transición del header glass */
+        header { transition: background 0.5s ease, backdrop-filter 0.5s ease, border-bottom 0.5s ease, mix-blend-mode 0.5s ease; }
+        header.header-glass { background: rgba(11, 11, 12, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); mix-blend-mode: normal; }
 
         /* Placeholder de imágenes / mockups */
         .img-placeholder {
@@ -689,6 +694,18 @@
             { y: "0%", opacity: 1, clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", stagger: 0.1, duration: 1.2, ease: "power4.out" },
             "-=0.8"
         );
+
+        // --- HEADER GLASS EFFECT ---
+        function updateHeaderGlass() {
+            const header = document.getElementById('header');
+            if (window.scrollY > window.innerHeight * 0.8) {
+                header.classList.add('header-glass');
+            } else {
+                header.classList.remove('header-glass');
+            }
+        }
+        window.addEventListener('scroll', updateHeaderGlass, { passive: true });
+        updateHeaderGlass();
 
         // --- ANIMACIONES DE SCROLL ---
         gsap.utils.toArray(".about-text").forEach(el => {
