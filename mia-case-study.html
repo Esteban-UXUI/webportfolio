@@ -161,17 +161,26 @@
 
     <!-- COVER MOCKUP -->
     <section class="px-8 md:px-20 pb-10 relative z-10">
-        <div class="max-w-7xl mx-auto img-placeholder h-[50vh] md:h-[85vh] project-card overflow-hidden relative">
+        <div class="max-w-7xl mx-auto img-placeholder h-[50vh] md:h-[85vh] project-card overflow-hidden relative" id="video-container">
             <video
+                id="cover-video"
                 src="https://res.cloudinary.com/dsbdjteyj/video/upload/v1784696164/Screen_Recording_2026-07-17_at_10.51.14_AM_d8ooel.webm"
-                loop
+                autoplay
+                muted
                 playsinline
                 controls
-                preload="metadata"
+                preload="auto"
                 class="absolute inset-0 w-full h-full object-cover"
                 aria-label="Video de presentación del caso de estudio MIA"
             ></video>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+            <button id="unmute-btn" class="absolute bottom-20 right-6 z-20 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center hover:bg-white/40 transition-all duration-300 cursor-pointer group" aria-label="Activar sonido">
+                <svg class="w-5 h-5 text-white" id="unmute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" id="wave1"></path>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" id="wave2"></path>
+                </svg>
+            </button>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
             <div class="absolute bottom-6 left-6 z-10">
                 <span class="ph-tag">Cover / Hero</span>
             </div>
@@ -727,6 +736,71 @@
                 lenis.start();
             }});
         });
+    </script>
+
+    <!-- SCRIPT: Control de sonido del video cover -->
+    <script>
+        (function() {
+            const video = document.getElementById('cover-video');
+            const unmuteBtn = document.getElementById('unmute-btn');
+            const iconContainer = unmuteBtn.querySelector('svg');
+
+            if (!video || !unmuteBtn) return;
+
+            let isMuted = true;
+
+            unmuteBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (isMuted) {
+                    video.muted = false;
+                    isMuted = false;
+                    // Cambiar icono a altavoz con ondas
+                    iconContainer.innerHTML = `
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    `;
+                    unmuteBtn.classList.add('bg-accent/40', 'border-accent/60');
+                    unmuteBtn.classList.remove('bg-white/20', 'border-white/30');
+                } else {
+                    video.muted = true;
+                    isMuted = true;
+                    // Cambiar icono a altavoz muteado
+                    iconContainer.innerHTML = `
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <line x1="23" y1="9" x2="17" y2="15"></line>
+                        <line x1="17" y1="9" x2="23" y2="15"></line>
+                    `;
+                    unmuteBtn.classList.remove('bg-accent/40', 'border-accent/60');
+                    unmuteBtn.classList.add('bg-white/20', 'border-white/30');
+                }
+            });
+
+            // Sincronizar estado si el usuario usa los controles nativos del video
+            video.addEventListener('volumechange', function() {
+                const currentlyMuted = video.muted;
+                if (currentlyMuted !== isMuted) {
+                    isMuted = currentlyMuted;
+                    if (isMuted) {
+                        iconContainer.innerHTML = `
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <line x1="23" y1="9" x2="17" y2="15"></line>
+                            <line x1="17" y1="9" x2="23" y2="15"></line>
+                        `;
+                        unmuteBtn.classList.remove('bg-accent/40', 'border-accent/60');
+                        unmuteBtn.classList.add('bg-white/20', 'border-white/30');
+                    } else {
+                        iconContainer.innerHTML = `
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                        `;
+                        unmuteBtn.classList.add('bg-accent/40', 'border-accent/60');
+                        unmuteBtn.classList.remove('bg-white/20', 'border-white/30');
+                    }
+                }
+            });
+        })();
     </script>
 
     <!-- SCRIPT 2: LOTTIE (Elemento gráfico del hero) -->
