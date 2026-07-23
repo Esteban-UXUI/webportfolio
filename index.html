@@ -6,14 +6,16 @@
     <title>Portfolio | Esteban UI</title>
     
     <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784700608/Favicon_mt8w4m.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: { dark: '#0B0B0C', surface: '#1A1A1D', accent: '#8B5CF6', light: '#F8F9FA' },
-                    fontFamily: { syne: ['Syne', 'sans-serif'], inter: ['Inter', 'sans-serif'] }
+                    fontFamily: { syne: ['Syne', 'sans-serif'], inter: ['Google Sans', 'sans-serif'] }
                 }
             }
         }
@@ -38,7 +40,7 @@
         
         .premium-input {
             width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding: 12px 0; color: white; font-family: 'Inter', sans-serif; transition: all 0.3s ease;
+            padding: 12px 0; color: white; font-family: 'Google Sans', sans-serif; transition: all 0.3s ease;
         }
         .premium-input:focus { outline: none; border-bottom-color: #8B5CF6; }
         .premium-input::placeholder { color: rgba(255,255,255,0.4); }
@@ -97,7 +99,7 @@
     <!-- PRELOADER TECNOLÓGICO -->
     <div id="preloader" class="fixed inset-0 z-[99999] bg-dark flex flex-col items-center justify-center">
         <div class="w-full max-w-sm px-8">
-            <div class="flex justify-between items-end mb-4 font-syne font-bold">
+            <div class="flex justify-between items-end mb-4 font-inter font-bold">
                 <span class="text-3xl text-white">Esteban UI</span>
                 <span id="loader-percentage" class="text-5xl text-white leading-none">0%</span>
             </div>
@@ -115,7 +117,7 @@
 
     <!-- HEADER -->
     <header class="fixed top-0 w-full z-40 flex justify-between items-center px-8 py-6 mix-blend-difference opacity-0" id="header">
-        <div class="font-syne font-bold text-xl tracking-tighter text-white">Esteban UI</div>
+        <div class="font-inter font-bold text-xl tracking-tighter text-white">Esteban UI</div>
         <div class="flex items-center gap-3 bg-[#1A1A1D]/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-white">
             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
             <span class="text-sm font-medium">Available for work</span>
@@ -126,7 +128,7 @@
     <section class="relative h-screen flex flex-col justify-center px-8 md:px-20 overflow-hidden">
         <div id="webgl-container"></div>
         <div class="relative z-10 max-w-5xl w-full">
-            <h1 class="font-syne text-[12vw] sm:text-[9vw] md:text-[7vw] leading-[0.85] sm:leading-[0.85] md:leading-[0.9] font-extrabold uppercase tracking-[-0.04em] mix-blend-difference text-white">
+            <h1 class="font-inter text-[12vw] sm:text-[9vw] md:text-[7vw] leading-[0.85] sm:leading-[0.85] md:leading-[0.9] font-extrabold uppercase tracking-[-0.04em] mix-blend-difference text-white">
                 <div class="overflow-hidden py-4 sm:py-5 -my-4 sm:-my-5"><span class="inline-block reveal-text translate-y-[150%]">Senior</span></div>
                 <div class="overflow-hidden py-4 sm:py-5 -my-4 sm:-my-5 text-accent"><span class="inline-block reveal-text translate-y-[150%]">Product</span></div>
                 <div class="overflow-hidden py-4 sm:py-5 -my-4 sm:-my-5"><span class="inline-block reveal-text translate-y-[150%]">Designer</span></div>
@@ -144,7 +146,7 @@
     <section class="py-32 px-8 md:px-20 bg-surface relative z-10 overflow-hidden" id="about">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div class="space-y-8 about-text">
-                <h2 class="font-syne text-4xl md:text-6xl font-bold leading-tight">
+                <h2 class="font-inter text-4xl md:text-6xl font-bold leading-tight">
                     El diseño no es <br>solo cómo se ve, <br>
                     <span class="text-accent italic">es cómo funciona.</span>
                 </h2>
@@ -153,11 +155,11 @@
                 </p>
                 <div class="flex gap-8 pt-4 border-t border-white/10 max-w-md">
                     <div>
-                        <span class="block font-syne text-3xl font-bold text-white">40+</span>
+                    <span class="block font-inter text-3xl font-bold text-white">40+</span>
                         <span class="text-sm text-gray-500 uppercase tracking-widest">Proyectos</span>
                     </div>
                     <div>
-                        <span class="block font-syne text-3xl font-bold text-white">8</span>
+                    <span class="block font-inter text-3xl font-bold text-white">8</span>
                         <span class="text-sm text-gray-500 uppercase tracking-widest">Años Exp.</span>
                     </div>
                 </div>
@@ -216,7 +218,7 @@
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
                 <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
-                    <h3 class="font-syne text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Ciencuadras • Seguros Bolivar</h3>
+                    <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Ciencuadras • Seguros Bolivar</h3>
                     <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Search IA • Design Strategy</p>
                 </div>
             </a>
@@ -227,7 +229,7 @@
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
                 <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
-                    <h3 class="font-syne text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Sentria • Netdata</h3>
+                    <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Sentria • Netdata</h3>
                     <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Cibersecurity            • Managed Detection and Response</p>
                 </div>
             </div>
@@ -238,7 +240,7 @@
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
                 <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
-                    <h3 class="font-syne text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Aura E-Commerce</h3>
+                    <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Aura E-Commerce</h3>
                     <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Web platform • Interaction Design</p>
                 </div>
             </div>
@@ -251,7 +253,7 @@
         <div class="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
         
         <div class="magnetic-btn relative z-10 text-center group" id="open-contact">
-            <h2 class="font-syne text-[15vw] leading-none font-bold tracking-tighter text-white group-hover:text-accent transition-colors duration-500">
+            <h2 class="font-inter text-[15vw] leading-none font-bold tracking-tighter text-white group-hover:text-accent transition-colors duration-500">
                 LET'S TALK
             </h2>
             <p class="mt-6 text-gray-400 uppercase tracking-widest text-sm">Click to start a project</p>
@@ -271,7 +273,7 @@
         <div class="absolute inset-0 bg-[#0B0B0C]/90 backdrop-blur-xl opacity-0" id="modal-bg"></div>
         <div class="relative z-10 w-full max-w-3xl px-8 opacity-0 translate-y-10" id="modal-content">
             <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-6">
-                <h2 class="font-syne text-4xl font-bold text-white">Nuevos Proyectos</h2>
+                <h2 class="font-inter text-4xl font-bold text-white">Nuevos Proyectos</h2>
                 <button id="close-contact" class="text-gray-400 hover:text-white text-5xl font-light transition-colors">&times;</button>
             </div>
             
@@ -295,7 +297,7 @@
                     </div>
                 </div>
                 <div class="pt-8 flex justify-end form-input-anim">
-                    <button type="button" class="px-10 py-5 bg-white text-dark rounded-full font-syne font-bold hover:bg-accent hover:text-white transition-colors duration-300 uppercase tracking-widest text-sm">
+                    <button type="button" class="px-10 py-5 bg-white text-dark rounded-full font-inter font-bold hover:bg-accent hover:text-white transition-colors duration-300 uppercase tracking-widest text-sm">
                         Enviar Mensaje
                     </button>
                 </div>
