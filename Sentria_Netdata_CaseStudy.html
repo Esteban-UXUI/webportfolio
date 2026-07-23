@@ -43,6 +43,14 @@
         header { transition: background 0.5s ease, backdrop-filter 0.5s ease, border-bottom 0.5s ease, mix-blend-mode 0.5s ease; }
         header.header-glass { background: rgba(11, 11, 12, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); mix-blend-mode: normal; }
 
+        /* Inputs del modal */
+        .premium-input {
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 0; color: white; font-family: 'Inter', sans-serif; transition: all 0.3s ease;
+        }
+        .premium-input:focus { outline: none; border-bottom-color: #E77238; }
+        .premium-input::placeholder { color: rgba(255,255,255,0.4); }
+
         /* Scanline de radar en el hero (elemento firma del caso) */
         #scanline { position: absolute; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, #E77238, transparent); box-shadow: 0 0 20px 2px rgba(231,114,56,0.6); opacity: 0.7; z-index: 5; pointer-events: none; }
 
@@ -632,27 +640,25 @@
     </section>
 
     <!-- FOOTER CTA -->
-    <footer class="relative flex flex-col items-center justify-center bg-dark overflow-hidden py-32 px-8">
+    <footer class="relative min-h-screen flex flex-col items-center justify-center bg-dark overflow-hidden py-20 px-8">
         <div class="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
 
-        <a href="mailto:esteban.ui.ux@gmail.com" class="magnetic-btn relative z-10 text-center group">
-            <h2 class="font-syne text-[10vw] md:text-[7vw] leading-none font-bold tracking-tighter text-white group-hover:text-accent transition-colors duration-500">
-                ¿HABLAMOS?
-            </h2>
-            <p class="mt-6 text-gray-400 uppercase tracking-widest text-sm font-mono">esteban.ui.ux@gmail.com</p>
-        </a>
+        <p class="text-gray-500 uppercase tracking-widest text-sm mb-8 text-center font-mono">¿Quieres ver más proyectos o conversar sobre este caso?</p>
 
-        <div class="relative z-10 mt-16 flex flex-wrap justify-center gap-x-10 gap-y-3 text-sm text-gray-500">
+        <div class="magnetic-btn relative z-10 text-center group" id="open-contact">
+            <h2 class="font-syne text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter text-white group-hover:text-accent transition-colors duration-500">
+                LET'S TALK
+            </h2>
+            <p class="mt-6 text-gray-400 uppercase tracking-widest text-sm font-mono">Click para escribirme</p>
+        </div>
+
+        <div class="mt-16 flex flex-col md:flex-row gap-3 md:gap-10 text-gray-400 text-sm font-mono">
+            <span>esteban.ui.ux@gmail.com</span>
             <span>estebanui.com</span>
             <span>+57 319 2472614</span>
-            <span>Design Systems · Zero-UI · Proptech · Fintech · E-commerce</span>
         </div>
 
-        <div class="relative z-10 mt-16">
-            <a href="index.html" class="text-sm text-gray-400 hover:text-white transition-colors uppercase tracking-widest">← Volver al portafolio</a>
-        </div>
-
-        <div class="absolute bottom-10 w-full flex justify-between px-8 md:px-20 text-sm text-gray-500">
+        <div class="absolute bottom-10 w-full flex justify-between px-8 md:px-20 text-sm text-gray-500 font-mono">
             <span>© 2025 Esteban · Senior Product Designer.</span>
             <div class="flex gap-6">
                 <a href="#" class="hover:text-white transition-colors">Twitter</a>
@@ -660,6 +666,43 @@
             </div>
         </div>
     </footer>
+
+    <!-- MODAL DE CONTACTO -->
+    <div id="contact-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center">
+        <div class="absolute inset-0 bg-[#0B0B0C]/90 backdrop-blur-xl opacity-0" id="modal-bg"></div>
+        <div class="relative z-10 w-full max-w-3xl px-8 opacity-0 translate-y-10" id="modal-content">
+            <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-6">
+                <h2 class="font-syne text-4xl font-bold text-white">Nuevos Proyectos</h2>
+                <button id="close-contact" class="text-gray-400 hover:text-white text-5xl font-light transition-colors">&times;</button>
+            </div>
+
+            <form class="space-y-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="form-input-anim">
+                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Nombre completo</label>
+                        <input type="text" placeholder="John Doe" class="premium-input">
+                    </div>
+                    <div class="form-input-anim">
+                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Email</label>
+                        <input type="email" placeholder="john@company.com" class="premium-input">
+                    </div>
+                    <div class="form-input-anim">
+                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Teléfono</label>
+                        <input type="tel" placeholder="+1 (555) 000-0000" class="premium-input">
+                    </div>
+                    <div class="form-input-anim">
+                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Asunto / Presupuesto</label>
+                        <input type="text" placeholder="Diseño de App / $10k+" class="premium-input">
+                    </div>
+                </div>
+                <div class="pt-8 flex justify-end form-input-anim">
+                    <button type="button" class="px-10 py-5 bg-white text-dark rounded-full font-syne font-bold hover:bg-accent hover:text-white transition-colors duration-300 uppercase tracking-widest text-sm">
+                        Enviar Mensaje
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- SCRIPT 1: LOADER & INTERFAZ (mismo patrón reutilizado del template base) -->
     <script>
@@ -721,6 +764,32 @@
         }
         window.addEventListener('scroll', updateHeaderGlass, { passive: true });
         updateHeaderGlass();
+
+        // --- LÓGICA DEL MODAL ---
+        (function modalLogic() {
+            const modal = document.getElementById('contact-modal');
+            const openBtn = document.getElementById('open-contact');
+            const closeBtn = document.getElementById('close-contact');
+            if (!modal || !openBtn || !closeBtn) return;
+
+            openBtn.addEventListener('click', () => {
+                lenis.stop();
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                gsap.to("#modal-bg", { opacity: 1, duration: 0.4, ease: "power2.out" });
+                gsap.to("#modal-content", { y: 0, opacity: 1, duration: 0.6, ease: "power3.out", delay: 0.1 });
+                gsap.fromTo(".form-input-anim", { y: 20, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.1, duration: 0.4, ease: "power2.out", delay: 0.3 });
+            });
+
+            closeBtn.addEventListener('click', () => {
+                gsap.to("#modal-content", { y: 30, opacity: 0, duration: 0.4, ease: "power2.in" });
+                gsap.to("#modal-bg", { opacity: 0, duration: 0.4, ease: "power2.in", delay: 0.2, onComplete: () => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    lenis.start();
+                }});
+            });
+        })();
 
         // --- SCANLINE DE RADAR (elemento firma del caso) ---
         gsap.to("#scanline", { top: "90%", duration: 4, ease: "sine.inOut", repeat: -1, yoyo: true, delay: 2.5 });
