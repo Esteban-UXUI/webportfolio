@@ -862,11 +862,6 @@
                 const shape = new THREE.Mesh(geometry, material);
                 scene.add(shape);
 
-                const coreGeo = new THREE.IcosahedronGeometry(0.9, 1);
-                const coreMat = new THREE.MeshPhysicalMaterial({ color: 0xe77238, metalness: 0.1, roughness: 0.2, transmission: 1.0, thickness: 0.5, ior: 1.5 });
-                const core = new THREE.Mesh(coreGeo, coreMat);
-                scene.add(core);
-
                 scene.add(new THREE.AmbientLight(0xffffff, 0.5));
                 const dirLight = new THREE.DirectionalLight(0xffffff, 2);
                 dirLight.position.set(5, 5, 5);
@@ -882,11 +877,8 @@
                     requestAnimationFrame(animate);
                     shape.rotation.x += 0.0015;
                     shape.rotation.y += 0.002;
-                    core.rotation.x -= 0.001;
-                    core.rotation.y -= 0.0025;
                     shape.position.x += (mouseX * 0.5 - shape.position.x) * 0.05;
                     shape.position.y += (mouseY * 0.5 - shape.position.y) * 0.05;
-                    core.position.copy(shape.position);
                     renderer.render(scene, camera);
                 }
                 animate();
