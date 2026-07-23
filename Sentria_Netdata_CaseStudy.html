@@ -154,50 +154,23 @@
 
     <!-- HERO SCREEN MOCK -->
     <section class="px-8 md:px-20 py-24 bg-dark relative z-10">
-        <div class="max-w-7xl mx-auto screen-mock aspect-video img-reveal">
-            <!-- REEMPLAZAR: captura real del Dashboard Principal (Dark Mode) -->
+        <div class="max-w-7xl mx-auto screen-mock aspect-video img-reveal relative overflow-hidden">
             <div class="screen-chrome">
                 <span class="screen-dot bg-red-500/70"></span><span class="screen-dot bg-amber-400/70"></span><span class="screen-dot bg-emerald-400/70"></span>
                 <span class="ml-4 text-[11px] font-mono text-gray-500">app.sentrianetdata.io/dashboard</span>
             </div>
-            <div class="grid-dots h-[calc(100%-40px)] w-full p-6 grid grid-cols-12 gap-4">
-                <div class="col-span-3 bg-[#17171B] rounded-xl border border-white/5 p-4 hidden md:flex flex-col gap-4">
-                    <div class="h-3 w-16 bg-white/10 rounded-full"></div>
-                    <div class="flex flex-col gap-3 mt-2">
-                        <div class="h-8 rounded-lg bg-accent/20 border border-accent/40 flex items-center px-3"><span class="h-2 w-2 rounded-full bg-accent"></span></div>
-                        <div class="h-8 rounded-lg bg-white/5 flex items-center px-3"><span class="h-2 w-2 rounded-full bg-white/20"></span></div>
-                        <div class="h-8 rounded-lg bg-white/5 flex items-center px-3"><span class="h-2 w-2 rounded-full bg-white/20"></span></div>
-                        <div class="h-8 rounded-lg bg-white/5 flex items-center px-3"><span class="h-2 w-2 rounded-full bg-white/20"></span></div>
-                    </div>
-                </div>
-                <div class="col-span-12 md:col-span-9 flex flex-col gap-4">
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="bg-[#17171B] rounded-xl border border-white/5 p-4">
-                            <span class="text-[10px] font-mono text-gray-500 uppercase">MTTD</span>
-                            <span class="block font-syne text-2xl font-bold text-white mt-1">4.2m</span>
-                        </div>
-                        <div class="bg-[#17171B] rounded-xl border border-white/5 p-4">
-                            <span class="text-[10px] font-mono text-gray-500 uppercase">MTTR</span>
-                            <span class="block font-syne text-2xl font-bold text-emerald-400 mt-1">11m</span>
-                        </div>
-                        <div class="bg-[#17171B] rounded-xl border border-white/5 p-4">
-                            <span class="text-[10px] font-mono text-gray-500 uppercase">Alertas críticas</span>
-                            <span class="block font-syne text-2xl font-bold text-red-400 mt-1">03</span>
-                        </div>
-                    </div>
-                    <div class="bg-[#17171B] rounded-xl border border-white/5 p-4 flex-1 flex items-end gap-2">
-                        <div class="bar bg-accent/70 w-full" style="height:35%"></div>
-                        <div class="bar bg-accent/70 w-full" style="height:55%"></div>
-                        <div class="bar bg-accent w-full" style="height:80%"></div>
-                        <div class="bar bg-accent/50 w-full" style="height:40%"></div>
-                        <div class="bar bg-red-500/70 w-full" style="height:90%"></div>
-                        <div class="bar bg-accent/60 w-full" style="height:60%"></div>
-                        <div class="bar bg-accent/40 w-full" style="height:30%"></div>
-                        <div class="bar bg-accent/70 w-full" style="height:70%"></div>
-                    </div>
-                </div>
-            </div>
-            <span class="screen-tag">Reemplazar · Dashboard Principal (Dark Mode)</span>
+            <video
+                src="https://res.cloudinary.com/dsbdjteyj/video/upload/v1784742849/videosentria_dyxvbl.webm"
+                autoplay
+                loop
+                muted
+                playsinline
+                class="absolute inset-0 w-full h-full object-cover"
+                style="top: 40px; height: calc(100% - 40px);"
+                aria-label="Video del dashboard de Sentria Netdata"
+            ></video>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" style="top: 40px;"></div>
+            <span class="screen-tag">Dashboard Principal · Sentria Netdata</span>
         </div>
     </section>
 
@@ -333,7 +306,9 @@
             <div class="fade-up bg-dark border border-accent/30 rounded-3xl p-10 md:p-14 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-10 md:gap-16 items-start relative overflow-hidden">
                 <div class="absolute -top-24 -right-24 w-72 h-72 bg-accent/10 rounded-full blur-3xl"></div>
                 <div class="relative flex md:flex-col items-center md:items-start gap-4">
-                    <div class="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-accent to-[#5a2d16] flex items-center justify-center font-syne text-3xl md:text-4xl font-extrabold text-white shrink-0">AL</div>
+                    <div class="w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden shrink-0 border-2 border-accent/40">
+                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784785424/mujer_arquetipo_zfa5dq.jpg" alt="Ana López" class="w-full h-full object-cover" />
+                    </div>
                     <div class="flex flex-col gap-2">
                         <span class="px-3 py-1 rounded-full border border-white/15 text-[10px] uppercase tracking-widest font-mono text-gray-300 w-fit">SOC</span>
                         <span class="px-3 py-1 rounded-full border border-white/15 text-[10px] uppercase tracking-widest font-mono text-gray-300 w-fit">Sector financiero</span>
@@ -458,29 +433,35 @@
 
             <!-- LIGHT / DARK MODE COMPARISON -->
             <div class="fade-up grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="screen-mock aspect-[4/3] img-reveal">
+                <div class="screen-mock img-reveal relative overflow-hidden" style="aspect-ratio: 16/10;">
                     <div class="screen-chrome">
                         <span class="screen-dot bg-red-500/70"></span><span class="screen-dot bg-amber-400/70"></span><span class="screen-dot bg-emerald-400/70"></span>
                         <span class="ml-4 text-[11px] font-mono text-gray-500">theme: dark</span>
                     </div>
-                    <div class="p-6 grid grid-cols-2 gap-3 h-[calc(100%-40px)]" style="background:#0d0d10">
-                        <div class="bg-[#1a1a1f] rounded-lg border border-white/5 p-3"><div class="h-2 w-10 bg-accent/50 rounded-full mb-2"></div><div class="h-2 w-16 bg-white/10 rounded-full"></div></div>
-                        <div class="bg-[#1a1a1f] rounded-lg border border-white/5 p-3"><div class="h-2 w-10 bg-emerald-400/50 rounded-full mb-2"></div><div class="h-2 w-16 bg-white/10 rounded-full"></div></div>
-                        <div class="bg-[#1a1a1f] rounded-lg border border-white/5 p-3 col-span-2"><div class="h-2 w-20 bg-red-400/50 rounded-full mb-2"></div><div class="h-2 w-full bg-white/10 rounded-full"></div></div>
+                    <div style="background:#0d0d10; top: 40px; height: calc(100% - 40px);" class="absolute inset-0 w-full flex items-center justify-center">
+                        <img
+                            src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784785792/%EF%B8%8F-Dashboard-DARK_uhmaxs.webp"
+                            alt="Componentes en Dark Mode"
+                            class="w-full h-full"
+                            style="object-fit: contain; max-width: 100%; max-height: 100%;"
+                        />
                     </div>
-                    <span class="screen-tag">Reemplazar · Componentes en Dark Mode</span>
+                    <span class="screen-tag">Componentes · Dark Mode</span>
                 </div>
-                <div class="screen-mock aspect-[4/3] img-reveal">
+                <div class="screen-mock img-reveal relative overflow-hidden" style="aspect-ratio: 16/10;">
                     <div class="screen-chrome" style="background:#EDEDF0; border-color: rgba(0,0,0,0.08)">
                         <span class="screen-dot bg-red-500/70"></span><span class="screen-dot bg-amber-400/70"></span><span class="screen-dot bg-emerald-500/70"></span>
                         <span class="ml-4 text-[11px] font-mono text-gray-500">theme: light</span>
                     </div>
-                    <div class="p-6 grid grid-cols-2 gap-3 h-[calc(100%-40px)]" style="background:#F5F5F7">
-                        <div class="bg-white rounded-lg border border-black/5 p-3 shadow-sm"><div class="h-2 w-10 bg-accent/40 rounded-full mb-2"></div><div class="h-2 w-16 bg-black/10 rounded-full"></div></div>
-                        <div class="bg-white rounded-lg border border-black/5 p-3 shadow-sm"><div class="h-2 w-10 bg-emerald-500/40 rounded-full mb-2"></div><div class="h-2 w-16 bg-black/10 rounded-full"></div></div>
-                        <div class="bg-white rounded-lg border border-black/5 p-3 shadow-sm col-span-2"><div class="h-2 w-20 bg-red-400/40 rounded-full mb-2"></div><div class="h-2 w-full bg-black/10 rounded-full"></div></div>
+                    <div style="background:#F5F5F7; top: 40px; height: calc(100% - 40px);" class="absolute inset-0 w-full flex items-center justify-center">
+                        <img
+                            src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784785799/%EF%B8%8F-Dashboard-3-LIGHT_tnzxma.webp"
+                            alt="Componentes en Light Mode"
+                            class="w-full h-full"
+                            style="object-fit: contain; max-width: 100%; max-height: 100%;"
+                        />
                     </div>
-                    <span class="screen-tag" style="color:rgba(0,0,0,0.5); background:rgba(255,255,255,0.75); border-color: rgba(0,0,0,0.1)">Reemplazar · Componentes en Light Mode</span>
+                    <span class="screen-tag" style="color:rgba(0,0,0,0.5); background:rgba(255,255,255,0.75); border-color: rgba(0,0,0,0.1)">Componentes · Light Mode</span>
                 </div>
             </div>
         </div>
