@@ -35,7 +35,7 @@
         body { background-color: #0B0B0C; color: #F8F9FA; margin: 0; overflow-x: hidden; }
         .magnetic-btn { display: inline-flex; cursor: pointer; }
         #webgl-container { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; }
-        @media (max-width: 768px) { #webgl-container { display: none; } }
+        @media (max-width: 768px) { #webgl-container { opacity: 0.35; } }
         ::-webkit-scrollbar { display: none; }
         
         .premium-input {
@@ -165,7 +165,7 @@
                 </div>
             </div>
             <!-- Video About -->
-            <div class="relative h-[70vh] w-[85%] justify-self-center rounded-2xl overflow-hidden about-img">
+            <div class="relative h-[50vh] md:h-[70vh] w-[85%] justify-self-center rounded-2xl overflow-hidden about-img">
                 <div class="absolute inset-0 bg-accent/20 z-10 mix-blend-overlay pointer-events-none"></div>
                 <video 
                     src="https://res.cloudinary.com/dsbdjteyj/video/upload/v1782216322/video_para_web_sin_marca_de_agua_jagc0q.webm" 
@@ -209,42 +209,83 @@
     <!-- PORTFOLIO GRID -->
     <section class="py-32 px-8 md:px-20 bg-dark relative z-10">
 
-        <div class="flex flex-col gap-32">
-            
-            <a href="/mia-case-study.html" class="group relative block w-full h-[60vh] md:h-[80vh] cursor-pointer overflow-hidden rounded-2xl project-card">
-                <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
-                    <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781719492/Portada_ojmu6g.jpg" alt="Project 2" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
-                    
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
-                <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
-                    <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Ciencuadras • Seguros Bolivar</h3>
-                    <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Search IA • Design Strategy</p>
-                </div>
-            </a>
+        <div class="flex flex-col md:flex-col gap-32 md:gap-32">
+            <!-- Mobile: horizontal scroll -->
+            <div class="flex md:hidden gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth -mx-8 px-8 pb-4" style="scrollbar-width: none;">
+                
+                <a href="/mia-case-study.html" class="group relative flex-shrink-0 w-[70vw] snap-center h-[45vh] cursor-pointer overflow-hidden rounded-2xl project-card">
+                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781719492/Portada_ojmu6g.jpg" alt="Project 2" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                    <div class="absolute bottom-6 left-6 z-10 pointer-events-none">
+                        <h3 class="font-inter text-2xl font-bold text-white">Ciencuadras • Seguros Bolivar</h3>
+                        <p class="mt-1 text-sm text-gray-300">Search IA • Design Strategy</p>
+                    </div>
+                </a>
 
-            <a href="/Sentria_Netdata_CaseStudy.html"  class="group relative w-full h-[60vh] md:h-[80vh] cursor-pointer overflow-hidden rounded-2xl project-card">
-                <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
-                    <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781302583/Sentria_portada_prixli.webp" alt="Project 2" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                <a href="/Sentria_Netdata_CaseStudy.html" class="group relative flex-shrink-0 w-[70vw] snap-center h-[45vh] cursor-pointer overflow-hidden rounded-2xl project-card">
+                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781302583/Sentria_portada_prixli.webp" alt="Sentria" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                    <div class="absolute bottom-6 left-6 z-10 pointer-events-none">
+                        <h3 class="font-inter text-2xl font-bold text-white">Sentria • Netdata</h3>
+                        <p class="mt-1 text-sm text-gray-300">Cibersecurity • MDR</p>
+                    </div>
+                </a>
+
+                <div class="group relative flex-shrink-0 w-[70vw] snap-center h-[45vh] cursor-pointer overflow-hidden rounded-2xl project-card">
+                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80" alt="Aura" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                    <div class="absolute bottom-6 left-6 z-10 pointer-events-none">
+                        <h3 class="font-inter text-2xl font-bold text-white">Aura E-Commerce</h3>
+                        <p class="mt-1 text-sm text-gray-300">Web platform • Interaction Design</p>
+                    </div>
                 </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
-                <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
-                    <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Sentria • Netdata</h3>
-                    <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Cibersecurity            • Managed Detection and Response</p>
-                </div>
+
             </div>
 
-            <div class="group relative w-full h-[60vh] md:h-[80vh] cursor-pointer overflow-hidden rounded-2xl project-card">
-                <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80" alt="Project 3" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
-                <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
-                    <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Aura E-Commerce</h3>
-                    <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Web platform • Interaction Design</p>
-                </div>
-            </div>
+            <!-- Desktop: stacked (hidden on mobile) -->
+            <div class="hidden md:flex flex-col gap-32">
+                
+                <a href="/mia-case-study.html" class="group relative block w-full h-[60vh] md:h-[80vh] cursor-pointer overflow-hidden rounded-2xl project-card">
+                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781719492/Portada_ojmu6g.jpg" alt="Project 2" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                        
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                    <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
+                        <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Ciencuadras • Seguros Bolivar</h3>
+                        <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Search IA • Design Strategy</p>
+                    </div>
+                </a>
 
+                <a href="/Sentria_Netdata_CaseStudy.html"  class="group relative w-full h-[60vh] md:h-[80vh] cursor-pointer overflow-hidden rounded-2xl project-card">
+                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781302583/Sentria_portada_prixli.webp" alt="Project 2" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                    <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
+                        <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Sentria • Netdata</h3>
+                        <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Cibersecurity            • Managed Detection and Response</p>
+                    </div>
+                </a>
+
+                <div class="group relative w-full h-[60vh] md:h-[80vh] cursor-pointer overflow-hidden rounded-2xl project-card">
+                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80" alt="Project 3" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                    <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
+                        <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Aura E-Commerce</h3>
+                        <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Web platform • Interaction Design</p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </section>
 
@@ -414,51 +455,54 @@
     <script type="module">
         import * as THREE from 'three';
         
-        if (window.innerWidth > 768) {
-            try {
-                const container = document.getElementById('webgl-container');
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
-                camera.position.z = 8;
-                const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                container.appendChild(renderer.domElement);
+        try {
+            const container = document.getElementById('webgl-container');
+            const scene = new THREE.Scene();
+            const isMobile = window.innerWidth <= 768;
+            const cameraDist = isMobile ? 12 : 8;
+            const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.z = cameraDist;
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
 
-                const geometry = new THREE.TorusKnotGeometry(1.5, 0.5, 128, 64);
-                const material = new THREE.MeshPhysicalMaterial({ color: 0x8b5cf6, metalness: 0.1, roughness: 0.2, transmission: 1.0, thickness: 0.5, ior: 1.5 });
-                const torus = new THREE.Mesh(geometry, material);
-                scene.add(torus);
+            const size = isMobile ? 0.9 : 1.5;
+            const geometry = new THREE.TorusKnotGeometry(size, size * 0.33, 96, 48);
+            const material = new THREE.MeshPhysicalMaterial({ color: 0x8b5cf6, metalness: 0.1, roughness: 0.2, transmission: 1.0, thickness: 0.5, ior: 1.5 });
+            const torus = new THREE.Mesh(geometry, material);
+            scene.add(torus);
 
-                scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-                const dirLight = new THREE.DirectionalLight(0xffffff, 2);
-                dirLight.position.set(5, 5, 5);
-                scene.add(dirLight);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+            const dirLight = new THREE.DirectionalLight(0xffffff, 2);
+            dirLight.position.set(5, 5, 5);
+            scene.add(dirLight);
 
-                let mouseX = 0, mouseY = 0;
-                document.addEventListener('mousemove', (e) => {
-                    mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-                    mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
-                });
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            });
 
-                function animate() {
-                    requestAnimationFrame(animate);
-                    torus.rotation.x += 0.002;
-                    torus.rotation.y += 0.003;
-                    torus.position.x += (mouseX * 0.5 - torus.position.x) * 0.05;
-                    torus.position.y += (mouseY * 0.5 - torus.position.y) * 0.05;
-                    renderer.render(scene, camera);
-                }
-                animate();
-
-                window.addEventListener('resize', () => {
-                    camera.aspect = window.innerWidth / window.innerHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(window.innerWidth, window.innerHeight);
-                });
-            } catch (err) {
-                console.warn("Three.js alert:", err);
+            function animate() {
+                requestAnimationFrame(animate);
+                torus.rotation.x += isMobile ? 0.004 : 0.002;
+                torus.rotation.y += isMobile ? 0.006 : 0.003;
+                torus.position.x += (mouseX * 0.5 - torus.position.x) * 0.05;
+                torus.position.y += (mouseY * 0.5 - torus.position.y) * 0.05;
+                renderer.render(scene, camera);
             }
+            animate();
+
+            window.addEventListener('resize', () => {
+                const isMobileNow = window.innerWidth <= 768;
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.position.z = isMobileNow ? 12 : 8;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        } catch (err) {
+            console.warn("Three.js alert:", err);
         }
     </script>
 </body>
