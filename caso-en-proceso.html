@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso de Estudio en Proceso | Esteban UI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { dark: '#0B0B0C', surface: '#1A1A1D', accent: '#8B5CF6', light: '#F8F9FA' },
+                    fontFamily: { syne: ['Syne', 'sans-serif'], inter: ['Google Sans', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <!-- Librerías Globales UI (mismas del resto del portafolio) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+
+    <script type="importmap">
+      { "imports": { "three": "https://unpkg.com/three@0.158.0/build/three.module.js" } }
+    </script>
+
+    <style>
+        body { background-color: #0B0B0C; color: #F8F9FA; margin: 0; overflow-x: hidden; }
+        .magnetic-btn { display: inline-flex; cursor: pointer; }
+        #webgl-container { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; }
+        @media (max-width: 768px) { #webgl-container { opacity: 0.35; } }
+        ::-webkit-scrollbar { display: none; }
+
+        /* Transición del header glass */
+        header { transition: background 0.5s ease, backdrop-filter 0.5s ease, border-bottom 0.5s ease, mix-blend-mode 0.5s ease; }
+        header.header-glass { background: rgba(11, 11, 12, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); mix-blend-mode: normal; }
+
+        .blinking-cursor::after { content: '_'; animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .stat-num { font-variant-numeric: tabular-nums; }
+
+        /* Loader circular — elemento motion central */
+        #ring-progress { transform: rotate(-90deg); transform-origin: 50% 50%; }
+        #ring-track { stroke: rgba(255,255,255,0.08); }
+        #ring-bar { stroke: #8B5CF6; stroke-linecap: round; filter: drop-shadow(0 0 8px rgba(139,92,246,0.6)); }
+
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #8B5CF6; }
+    </style>
+</head>
+<body class="font-inter selection:bg-accent selection:text-white overflow-hidden">
+
+    <!-- PRELOADER -->
+    <div id="preloader" class="fixed inset-0 z-[99999] bg-dark flex flex-col items-center justify-center">
+        <div class="w-full max-w-sm px-8">
+            <div class="flex justify-between items-end mb-4 font-syne font-bold">
+                <span class="text-3xl text-white">···</span>
+                <span id="loader-percentage" class="text-5xl text-white leading-none">0%</span>
+            </div>
+            <div class="w-full h-[2px] bg-white/10 overflow-hidden relative">
+                <div id="loader-progress" class="absolute top-0 left-0 h-full bg-accent w-0"></div>
+            </div>
+            <div class="mt-4 text-xs font-mono text-gray-500 uppercase tracking-widest flex justify-between">
+                <span id="loader-text" class="blinking-cursor">Preparando la página</span>
+                <span>ESTEBAN UI</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="fixed top-0 w-full z-40 flex justify-between items-center px-8 py-6 mix-blend-difference opacity-0" id="header">
+        <a href="index.html" class="font-syne font-bold text-xl tracking-tighter text-white flex items-center gap-2">
+            <span class="text-accent">←</span> Esteban UI
+        </a>
+        <div class="flex items-center gap-3 bg-[#1A1A1D]/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-white">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span class="text-sm font-medium font-mono">En construcción</span>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="relative min-h-screen flex flex-col items-center justify-center px-8 text-center overflow-hidden">
+        <div id="webgl-container"></div>
+
+        <div class="relative z-10 flex flex-col items-center">
+
+            <!-- LOADER MOTION: anillo de progreso animado -->
+            <div class="fade-up relative w-40 h-40 md:w-52 md:h-52 mb-12 flex items-center justify-center">
+                <svg id="ring-progress" class="w-full h-full" viewBox="0 0 120 120">
+                    <circle id="ring-track" cx="60" cy="60" r="52" fill="none" stroke-width="2"></circle>
+                    <circle id="ring-bar" cx="60" cy="60" r="52" fill="none" stroke-width="2" stroke-dasharray="327" stroke-dashoffset="327"></circle>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <span id="ring-percentage" class="font-syne text-3xl md:text-4xl font-extrabold text-white stat-num">00%</span>
+                    <span class="text-[10px] uppercase tracking-widest text-gray-500 font-mono mt-1">Progreso</span>
+                </div>
+            </div>
+
+            <span class="reveal-text inline-block translate-y-[150%] opacity-0 text-xs md:text-sm uppercase tracking-[0.3em] text-gray-500 font-mono mb-6">Case Study · Próximamente</span>
+
+            <h1 class="font-inter text-[13vw] md:text-[6.5vw] leading-[0.95] font-bold uppercase tracking-tighter mix-blend-difference text-white">
+                <div class="overflow-hidden py-2 -my-2"><span class="inline-block reveal-text translate-y-[150%]">Caso de estudio</span></div>
+                <div class="overflow-hidden py-2 -my-2"><span class="inline-block reveal-text translate-y-[150%] text-accent italic">en proceso</span></div>
+            </h1>
+
+            <p class="mt-8 text-lg md:text-xl text-gray-400 max-w-xl font-light">
+                <span class="reveal-text inline-block translate-y-[150%] opacity-0">Estoy documentando este proyecto con el mismo cuidado</span>
+                <span class="reveal-text inline-block translate-y-[150%] opacity-0">con el que lo diseñé. Vuelve pronto para ver el proceso completo.</span>
+            </p>
+
+            <div class="fade-up mt-12 flex items-center gap-2 text-gray-500 font-mono text-sm">
+                <span class="dot animate-pulse"></span>
+                <span id="status-text">Redactando el research</span>
+                <span class="blinking-cursor"></span>
+            </div>
+
+            <div class="fade-up mt-16">
+                <a href="index.html" class="magnetic-btn group inline-flex items-center gap-3 border border-white/15 rounded-full px-8 py-4 hover:border-accent transition-colors duration-500">
+                    <span class="font-syne font-bold text-sm uppercase tracking-widest text-white group-hover:text-accent transition-colors duration-500">Volver al portafolio</span>
+                    <span class="text-accent">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="relative flex flex-col items-center justify-center bg-dark overflow-hidden py-20 px-8">
+        <div class="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+        <p class="text-gray-500 text-sm font-mono">¿No quieres esperar? Escríbeme y te cuento el avance.</p>
+        <a href="mailto:esteban.ui.ux@gmail.com" class="magnetic-btn mt-4 font-syne font-bold text-white hover:text-accent transition-colors duration-500 text-lg">esteban.ui.ux@gmail.com</a>
+        <div class="mt-12 w-full flex flex-col md:flex-row gap-4 justify-between items-center text-xs text-gray-500 max-w-4xl">
+            <span>© 2025 Esteban · Senior Product Designer.</span>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-white transition-colors">Behance</a>
+                <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT 1: LOADER & INTERFAZ (mismo patrón reutilizado) -->
+    <script>
+        const lenis = new Lenis({ lerp: 0.05, smoothWheel: true });
+        lenis.stop();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- PRELOADER ---
+        const tlLoader = gsap.timeline();
+        let counter = { value: 0 };
+        const loadingTexts = ["PREPARANDO LA PÁGINA", "CARGANDO PROGRESO", "CASI LISTO"];
+        let textIndex = 0;
+
+        const textInterval = setInterval(() => {
+            textIndex++;
+            if (textIndex < loadingTexts.length) {
+                document.getElementById('loader-text').innerText = loadingTexts[textIndex];
+            }
+        }, 500);
+
+        tlLoader.to(counter, {
+            value: 100,
+            duration: 2,
+            ease: "power2.inOut",
+            onUpdate: () => {
+                document.getElementById('loader-percentage').innerText = Math.round(counter.value) + '%';
+            }
+        }, 0)
+        .to("#loader-progress", { width: "100%", duration: 2, ease: "power2.inOut" }, 0)
+        .to("#preloader", {
+            yPercent: -100,
+            duration: 1,
+            ease: "expo.inOut",
+            delay: 0.15,
+            onComplete: () => {
+                clearInterval(textInterval);
+                document.body.classList.remove('overflow-hidden');
+                lenis.start();
+            }
+        })
+        .to("#header", { opacity: 1, duration: 1, ease: "power2.out" }, "-=0.5")
+        .fromTo(".reveal-text",
+            { y: "150%", opacity: 0, clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)" },
+            { y: "0%", opacity: 1, clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", stagger: 0.1, duration: 1.2, ease: "power4.out" },
+            "-=0.7"
+        )
+        .fromTo(".fade-up",
+            { y: 40, opacity: 0 },
+            { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out" },
+            "-=0.9"
+        );
+
+        // --- HEADER GLASS EFFECT ---
+        function updateHeaderGlass() {
+            const header = document.getElementById('header');
+            if (window.scrollY > window.innerHeight * 0.8) {
+                header.classList.add('header-glass');
+            } else {
+                header.classList.remove('header-glass');
+            }
+        }
+        window.addEventListener('scroll', updateHeaderGlass, { passive: true });
+        updateHeaderGlass();
+
+        // --- ANILLO DE PROGRESO: motion loop indefinido, representa "trabajo en curso" ---
+        const ringBar = document.getElementById('ring-bar');
+        const ringPct = document.getElementById('ring-percentage');
+        const circumference = 327;
+        let ringState = { value: 0 };
+
+        function pulseRing(target, dur) {
+            gsap.to(ringState, {
+                value: target,
+                duration: dur,
+                ease: "power2.inOut",
+                onUpdate: () => {
+                    const offset = circumference - (circumference * ringState.value / 100);
+                    ringBar.style.strokeDashoffset = offset;
+                    ringPct.innerText = String(Math.round(ringState.value)).padStart(2, '0') + '%';
+                }
+            });
+        }
+
+        const tlRing = gsap.timeline({ delay: 2.6, repeat: -1, repeatDelay: 1 });
+        tlRing.call(() => pulseRing(72, 1.8))
+              .to({}, { duration: 1.8 })
+              .call(() => pulseRing(35, 1.2))
+              .to({}, { duration: 1.2 })
+              .call(() => pulseRing(88, 1.6))
+              .to({}, { duration: 1.6 });
+
+        gsap.to("#ring-progress", { rotation: "+=360", duration: 12, repeat: -1, ease: "none", transformOrigin: "50% 50%" });
+
+        // --- TEXTO DE ESTADO ROTATIVO ---
+        const statusMessages = ["Redactando el research", "Puliendo el sistema de diseño", "Exportando prototipos", "Documentando resultados"];
+        let statusIndex = 0;
+        setInterval(() => {
+            statusIndex = (statusIndex + 1) % statusMessages.length;
+            gsap.to("#status-text", {
+                opacity: 0, duration: 0.3, onComplete: () => {
+                    document.getElementById('status-text').innerText = statusMessages[statusIndex];
+                    gsap.to("#status-text", { opacity: 1, duration: 0.3 });
+                }
+            });
+        }, 3000);
+
+        // --- BOTONES MAGNÉTICOS ---
+        document.querySelectorAll('.magnetic-btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                gsap.to(btn, { x: (e.clientX - rect.left - rect.width / 2) * 0.3, y: (e.clientY - rect.top - rect.height / 2) * 0.3, duration: 1, ease: "elastic.out(1, 0.3)" });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.3)" });
+            });
+        });
+    </script>
+
+    <!-- SCRIPT 2: THREE.JS (mismo módulo aislado, reutilizado — visible en desktop y mobile como en index) -->
+    <script type="module">
+        import * as THREE from 'three';
+
+        try {
+            const container = document.getElementById('webgl-container');
+            const scene = new THREE.Scene();
+            const isMobile = window.innerWidth <= 768;
+            const cameraDist = isMobile ? 12 : 8;
+            const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.z = cameraDist;
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            const size = isMobile ? 0.9 : 1.5;
+            const geometry = new THREE.TorusKnotGeometry(size, size * 0.33, 96, 48);
+            const material = new THREE.MeshPhysicalMaterial({ color: 0x8b5cf6, metalness: 0.1, roughness: 0.2, transmission: 1.0, thickness: 0.5, ior: 1.5 });
+            const torus = new THREE.Mesh(geometry, material);
+            torus.position.y = -1.2;
+            scene.add(torus);
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+            const dirLight = new THREE.DirectionalLight(0xffffff, 2);
+            dirLight.position.set(5, 5, 5);
+            scene.add(dirLight);
+
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                torus.rotation.x += isMobile ? 0.004 : 0.002;
+                torus.rotation.y += isMobile ? 0.006 : 0.003;
+                torus.position.x += (mouseX * 0.4 - torus.position.x) * 0.05;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                const isMobileNow = window.innerWidth <= 768;
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.position.z = isMobileNow ? 12 : 8;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        } catch (err) {
+            console.warn("Three.js alert:", err);
+        }
+    </script>
+</body>
+</html>
