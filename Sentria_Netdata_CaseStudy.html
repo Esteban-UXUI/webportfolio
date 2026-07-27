@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentria Netdata — Rediseño MDR & UX Handoff | Caso de Estudio · Esteban UI</title>
+    <title>Sentria Netdata — Rediseño MDR UX | Caso de Estudio · Esteban UI</title>
 
-    <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784700608/Favicon_mt8w4m.svg">
+    <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/dsbdjteyj/image/upload/v1785189385/Favicon_e7dlzn.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
@@ -96,9 +96,15 @@
         <a href="index.html" class="font-inter font-bold text-xl tracking-tighter text-white flex items-center gap-2">
             <span class="text-accent">←</span> Esteban UI
         </a>
-        <div class="flex items-center gap-3 bg-[#1A1A1D]/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-white">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="text-sm font-medium font-mono">MDR · Enterprise Security</span>
+        <div class="flex items-center gap-4">
+            <!-- Language switcher: single flag toggles ES/EN -->
+            <div class="lang-switcher bg-[#1A1A1D]/50 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/10 flex items-center">
+                <button id="lang-toggle" onclick="toggleLanguage()" class="text-sm leading-none px-1.5 py-0.5 rounded-full hover:bg-white/10 transition-colors" style="font-size: 18px;">🇪🇸</button>
+            </div>
+            <div class="flex items-center gap-3 bg-[#1A1A1D]/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-white">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-sm font-medium font-mono">MDR</span>
+            </div>
         </div>
     </header>
 
@@ -628,10 +634,10 @@
             </p>
             <div class="fade-up flex flex-col sm:flex-row items-center justify-center gap-6">
                 <a href="https://apps.apple.com/co/app/sentria/id1628600559" target="_blank" rel="noopener noreferrer" class="transition-transform duration-300 hover:scale-105 hover:opacity-90">
-                    <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784828747/png-transparent-app-store-google-play-iphone-iphone-electronics-text-logo_trer4q.png" alt="Descargar en App Store" class="h-14 w-auto" />
+                    <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1785188986/download-on-the-app-store-apple-logo-svgrepo-com_zp2w5p.svg" alt="Descargar en App Store" class="h-14 w-auto" style="height: 56px; width: auto;" />
                 </a>
                 <a href="https://play.google.com/store/apps/details?id=com.netdatanetworks.sentria.mobile&pli=1" target="_blank" rel="noopener noreferrer" class="transition-transform duration-300 hover:scale-105 hover:opacity-90">
-                    <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784828744/Google_Play_Store_badge_EN.svg_bxhqj7.webp" alt="Descargar en Google Play" class="h-14 w-auto" />
+                    <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1784828744/Google_Play_Store_badge_EN.svg_bxhqj7.webp" alt="Descargar en Google Play" class="h-14 w-auto" style="height: 56px; width: auto;" />
                 </a>
             </div>
         </div>
@@ -871,5 +877,42 @@
             console.warn("Three.js alert:", err);
         }
     </script>
+    <!-- Google Translate hidden element &amp; language switcher logic -->
+    <div id="google_translate_element" style="display:none;"></div>
+
+    <script>
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: 'es', autoDisplay: false },
+          'google_translate_element'
+        );
+      }
+
+      function getCurrentLang() {
+        // Check cookie for current Google Translate language
+        const match = document.cookie.match(/googtrans=\/es\/(\w+)/);
+        return match ? match[1] : 'es';
+      }
+
+      function toggleLanguage() {
+        const current = getCurrentLang();
+        const next = current === 'en' ? 'es' : 'en';
+        const domain = window.location.hostname;
+        document.cookie = `googtrans=/es/${next}; path=/`;
+        document.cookie = `googtrans=/es/${next}; path=/; domain=${domain}`;
+        location.reload();
+      }
+
+      // Set the correct flag on page load based on cookie
+      document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('lang-toggle');
+        if (btn) {
+          btn.textContent = getCurrentLang() === 'en' ? '🇬🇧' : '🇪🇸';
+        }
+      });
+    </script>
+
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
