@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -91,6 +91,93 @@
         @keyframes scroll-logos {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
+        }
+
+        /* 3D Tilt Card Effect */
+        .project-card {
+            perspective: 1200px;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        .project-card .card-inner {
+            transform-style: preserve-3d;
+            transition: box-shadow 0.5s ease;
+        }
+        .project-card .card-bg {
+            will-change: transform;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .project-card .card-shine {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background: radial-gradient(
+                circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.15) 0%,
+                transparent 60%
+            );
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            mix-blend-mode: overlay;
+        }
+        .project-card:hover .card-shine {
+            opacity: 1;
+        }
+        .project-card .card-content {
+            transform-style: preserve-3d;
+            transform: translateZ(30px);
+        }
+
+        /* Scroll snap carousel styling */
+        .project-carousel {
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            overscroll-behavior-x: contain;
+        }
+        .project-carousel::-webkit-scrollbar {
+            display: none;
+        }
+        .project-carousel .project-card {
+            scroll-snap-align: center;
+        }
+        /* Mask edges for carousel */
+        .project-carousel-mask {
+            mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+        }
+
+        /* Carousel indicator dots */
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 24px;
+        }
+        .carousel-dot {
+            width: 48px;
+            height: 3px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.15);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+        .carousel-dot.active {
+            background: #8B5CF6;
+            width: 72px;
+        }
+
+        /* Ocultar la barra de Google Translate */
+        .goog-te-banner-frame.skiptranslate,
+        #google_translate_element,
+        .goog-tooltip,
+        .goog-text-highlight {
+          display: none !important;
+        }
+        body {
+          top: 0px !important;
+          position: static !important;
         }
     </style>
 </head>
@@ -225,77 +312,102 @@
             <div class="flex md:hidden gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth -mx-8 px-8 pb-4" style="scrollbar-width: none;">
                 
                 <a href="/mia-case-study.html" class="group relative flex-shrink-0 w-[70vw] snap-center h-[45vh] cursor-pointer overflow-hidden rounded-2xl project-card">
-                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
-                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781719492/Portada_ojmu6g.jpg" alt="Project 2" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-6 left-6 z-10 pointer-events-none">
-                        <h3 class="font-inter text-2xl font-bold text-white">Ciencuadras • Seguros Bolivar</h3>
-                        <p class="mt-1 text-sm text-gray-300">Search IA • Design Strategy</p>
+                    <div class="card-inner relative w-full h-full">
+                        <div class="card-bg absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                            <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781719492/Portada_ojmu6g.jpg" alt="Project 2" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                        </div>
+                        <div class="card-shine"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                        <div class="card-content absolute bottom-6 left-6 z-10 pointer-events-none">
+                            <h3 class="font-inter text-2xl font-bold text-white">Ciencuadras • Seguros Bolivar</h3>
+                            <p class="mt-1 text-sm text-gray-300">Search IA • Design Strategy</p>
+                        </div>
                     </div>
                 </a>
 
                 <a href="/Sentria_Netdata_CaseStudy.html" class="group relative flex-shrink-0 w-[70vw] snap-center h-[45vh] cursor-pointer overflow-hidden rounded-2xl project-card">
-                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
-                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781302583/Sentria_portada_prixli.webp" alt="Sentria" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-6 left-6 z-10 pointer-events-none">
-                        <h3 class="font-inter text-2xl font-bold text-white">Sentria • Netdata</h3>
-                        <p class="mt-1 text-sm text-gray-300">Cibersecurity • MDR</p>
+                    <div class="card-inner relative w-full h-full">
+                        <div class="card-bg absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                            <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781302583/Sentria_portada_prixli.webp" alt="Sentria" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                        </div>
+                        <div class="card-shine"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                        <div class="card-content absolute bottom-6 left-6 z-10 pointer-events-none">
+                            <h3 class="font-inter text-2xl font-bold text-white">Sentria • Netdata</h3>
+                            <p class="mt-1 text-sm text-gray-300">Cibersecurity • MDR</p>
+                        </div>
                     </div>
                 </a>
 
                 <a href="caso-en-proceso.html" class="group relative flex-shrink-0 w-[70vw] snap-center h-[45vh] cursor-pointer overflow-hidden rounded-2xl project-card">
-                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
-                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781302584/totalPlayPortada_wlbvhj.webp" alt="Totalplay" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-6 left-6 z-10 pointer-events-none">
-                        <h3 class="font-inter text-2xl font-bold text-white">Totalplay</h3>
-                        <p class="mt-1 text-sm text-gray-300">Super app • IA Platform</p>
+                    <div class="card-inner relative w-full h-full">
+                        <div class="card-bg absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                            <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781302584/totalPlayPortada_wlbvhj.webp" alt="Totalplay" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                        </div>
+                        <div class="card-shine"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                        <div class="card-content absolute bottom-6 left-6 z-10 pointer-events-none">
+                            <h3 class="font-inter text-2xl font-bold text-white">Totalplay</h3>
+                            <p class="mt-1 text-sm text-gray-300">Super app • IA Platform</p>
+                        </div>
                     </div>
                 </a>
 
             </div>
 
-            <!-- Desktop: stacked (hidden on mobile) -->
-            <div class="hidden md:flex flex-col gap-32">
-                
-                <a href="/mia-case-study.html" class="group relative block w-full h-[60vh] md:h-[80vh] cursor-pointer overflow-hidden rounded-2xl project-card">
-                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
-                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781719492/Portada_ojmu6g.jpg" alt="Project 2" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
-                        
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
-                        <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Ciencuadras • Seguros Bolivar</h3>
-                        <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Search IA • Design Strategy</p>
-                    </div>
-                </a>
+            <!-- Desktop: horizontal scroll carousel (hidden on mobile) -->
+            <div class="hidden md:block project-carousel-mask">
+                <div class="project-carousel flex gap-8 overflow-x-auto scroll-smooth pb-8" style="scrollbar-width: none;">
+                    
+                    <a href="/mia-case-study.html" class="group relative flex-shrink-0 w-[80vw] snap-center h-[70vh] cursor-pointer overflow-hidden rounded-2xl project-card">
+                        <div class="card-inner relative w-full h-full">
+                            <div class="card-bg absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                                <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781719492/Portada_ojmu6g.jpg" alt="Project 2" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                            </div>
+                            <div class="card-shine"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                            <div class="card-content absolute bottom-10 left-10 z-10 pointer-events-none">
+                                <h3 class="font-inter text-4xl md:text-5xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Ciencuadras • Seguros Bolivar</h3>
+                                <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Search IA • Design Strategy</p>
+                            </div>
+                        </div>
+                    </a>
 
-                <a href="/Sentria_Netdata_CaseStudy.html"  class="group relative w-full h-[60vh] md:h-[80vh] cursor-pointer overflow-hidden rounded-2xl project-card">
-                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
-                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781302583/Sentria_portada_prixli.webp" alt="Project 2" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
-                        <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Sentria • Netdata</h3>
-                        <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Cibersecurity            • Managed Detection and Response</p>
-                    </div>
-                </a>
+                    <a href="/Sentria_Netdata_CaseStudy.html" class="group relative flex-shrink-0 w-[80vw] snap-center h-[70vh] cursor-pointer overflow-hidden rounded-2xl project-card">
+                        <div class="card-inner relative w-full h-full">
+                            <div class="card-bg absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                                <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781302583/Sentria_portada_prixli.webp" alt="Project 2" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                            </div>
+                            <div class="card-shine"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                            <div class="card-content absolute bottom-10 left-10 z-10 pointer-events-none">
+                                <h3 class="font-inter text-4xl md:text-5xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Sentria • Netdata</h3>
+                                <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Cibersecurity            • Managed Detection and Response</p>
+                            </div>
+                        </div>
+                    </a>
 
-                <a href="caso-en-proceso.html" class="group relative w-full h-[60vh] md:h-[80vh] cursor-pointer overflow-hidden rounded-2xl project-card">
-                    <div class="absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
-                        <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781302584/totalPlayPortada_wlbvhj.webp" alt="Totalplay" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-10 left-10 z-10 pointer-events-none">
-                        <h3 class="font-inter text-4xl md:text-6xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Totalplay</h3>
-                        <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Super app • IA Platform</p>
-                    </div>
-                </a>
+                    <a href="caso-en-proceso.html" class="group relative flex-shrink-0 w-[80vw] snap-center h-[70vh] cursor-pointer overflow-hidden rounded-2xl project-card">
+                        <div class="card-inner relative w-full h-full">
+                            <div class="card-bg absolute inset-0 bg-surface transform scale-105 group-hover:scale-100 transition-transform duration-1000" style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+                                <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1781302584/totalPlayPortada_wlbvhj.webp" alt="Totalplay" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 filter grayscale group-hover:grayscale-0">
+                            </div>
+                            <div class="card-shine"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent pointer-events-none"></div>
+                            <div class="card-content absolute bottom-10 left-10 z-10 pointer-events-none">
+                                <h3 class="font-inter text-4xl md:text-5xl font-bold text-white group-hover:-translate-y-2 transition-transform duration-500">Totalplay</h3>
+                                <p class="mt-2 text-gray-300 group-hover:-translate-y-2 transition-transform duration-500 delay-75">Super app • IA Platform</p>
+                            </div>
+                        </div>
+                    </a>
 
+                </div>
+                <!-- Carousel dots indicator -->
+                <div class="carousel-dots hidden md:flex" id="carousel-dots">
+                    <span class="carousel-dot active" data-index="0"></span>
+                    <span class="carousel-dot" data-index="1"></span>
+                    <span class="carousel-dot" data-index="2"></span>
+                </div>
             </div>
         </div>
     </section>
@@ -437,6 +549,107 @@
                 gsap.to(btn, { x: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.3)" });
             });
         });
+
+        // --- 3D TILT EFFECT FOR CARDS ---
+        document.querySelectorAll('.project-card').forEach(card => {
+            const inner = card.querySelector('.card-inner');
+            const bg = card.querySelector('.card-bg');
+            const shine = card.querySelector('.card-shine');
+
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Calculate rotation: max ±15 degrees
+                const rotateX = ((y - centerY) / centerY) * -8;
+                const rotateY = ((x - centerX) / centerX) * 8;
+                
+                // Apply 3D transform to card
+                gsap.to(card, {
+                    rotateX: rotateX,
+                    rotateY: rotateY,
+                    duration: 0.6,
+                    ease: "power2.out",
+                    transformPerspective: 1200,
+                });
+                
+                // Parallax background: move opposite direction with depth
+                if (bg) {
+                    const bgX = ((x - centerX) / centerX) * -12;
+                    const bgY = ((y - centerY) / centerY) * -12;
+                    gsap.to(bg, {
+                        x: bgX,
+                        y: bgY,
+                        duration: 0.6,
+                        ease: "power2.out",
+                    });
+                }
+                
+                // Update shine position via CSS variables
+                if (shine) {
+                    const percentX = (x / rect.width) * 100;
+                    const percentY = (y / rect.height) * 100;
+                    shine.style.setProperty('--mouse-x', percentX + '%');
+                    shine.style.setProperty('--mouse-y', percentY + '%');
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, {
+                    rotateX: 0,
+                    rotateY: 0,
+                    duration: 1,
+                    ease: "elastic.out(1, 0.4)"
+                });
+                if (bg) {
+                    gsap.to(bg, {
+                        x: 0,
+                        y: 0,
+                        duration: 1,
+                        ease: "elastic.out(1, 0.4)"
+                    });
+                }
+                if (shine) {
+                    shine.style.setProperty('--mouse-x', '50%');
+                    shine.style.setProperty('--mouse-y', '50%');
+                }
+            });
+        });
+
+        // --- CAROUSEL DOTS SYNC (Desktop) ---
+        const carousel = document.querySelector('.project-carousel');
+        const dots = document.querySelectorAll('.carousel-dot');
+        
+        if (carousel && dots.length) {
+            const updateDots = () => {
+                const scrollLeft = carousel.scrollLeft;
+                const cardWidth = carousel.querySelector('.project-card')?.offsetWidth || 1;
+                const gap = 32; // gap-8 = 2rem = 32px
+                const totalWidth = cardWidth + gap;
+                const idx = Math.round(scrollLeft / totalWidth);
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === idx);
+                });
+            };
+            
+            carousel.addEventListener('scroll', updateDots, { passive: true });
+            
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const idx = parseInt(dot.dataset.index);
+                    const card = carousel.querySelectorAll('.project-card')[idx];
+                    if (card) {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                });
+            });
+            
+            // Initial sync
+            setTimeout(updateDots, 100);
+        }
 
         // --- LÓGICA DEL MODAL ---
         const modal = document.getElementById('contact-modal');

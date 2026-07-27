@@ -70,6 +70,18 @@
 
         .stat-num { font-variant-numeric: tabular-nums; }
         .code-block { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; }
+
+        /* Ocultar la barra de Google Translate */
+        .goog-te-banner-frame.skiptranslate,
+        #google_translate_element,
+        .goog-tooltip,
+        .goog-text-highlight {
+          display: none !important;
+        }
+        body {
+          top: 0px !important;
+          position: static !important;
+        }
     </style>
 </head>
 <body class="font-inter selection:bg-accent selection:text-white overflow-hidden">
