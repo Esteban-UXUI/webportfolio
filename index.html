@@ -37,6 +37,10 @@
         #webgl-container { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; pointer-events: none; }
         @media (max-width: 768px) { #webgl-container { opacity: 0.35; } }
         ::-webkit-scrollbar { display: none; }
+
+        /* Ocultar barra de Google Translate */
+        .goog-te-banner-frame, #google_translate_element, .goog-tooltip, .goog-text-highlight { display: none !important; }
+        body { top: 0 !important; position: static !important; }
         
         .premium-input {
             width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2);
@@ -198,7 +202,7 @@
         <div class="flex items-center gap-4">
 <!-- Language switcher: visual toggle -->
             <div class="lang-switcher bg-[#1A1A1D]/50 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/10 flex items-center">
-                <button id="lang-toggle" onclick="cambiarIdioma()" class="text-sm leading-none px-1.5 py-0.5 rounded-full hover:bg-white/10 transition-colors" style="font-size: 18px;" title="Translate to English">🇪🇸</button>
+                <button id="lang-toggle" onclick="toggleLanguage()" class="text-sm leading-none px-1.5 py-0.5 rounded-full hover:bg-white/10 transition-colors" style="font-size: 18px;" title="Translate to English">🇪🇸</button>
             </div>
             <div class="flex items-center gap-3 bg-[#1A1A1D]/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-white">
                 <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -431,27 +435,31 @@
                 <button id="close-contact" class="text-gray-400 hover:text-white text-5xl font-light transition-colors">&times;</button>
             </div>
             
-            <form class="space-y-10">
+            <form id="contact-form" action="https://formspree.io/f/xwvzvyek" method="POST" class="space-y-10">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div class="form-input-anim">
                         <label id="label-name" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Nombre completo</label>
-                        <input type="text" placeholder="John Doe" class="premium-input">
+                        <input type="text" name="nombre" placeholder="John Doe" class="premium-input" required>
                     </div>
                     <div class="form-input-anim">
                         <label id="label-email" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Email</label>
-                        <input type="email" placeholder="john@company.com" class="premium-input">
+                        <input type="email" name="email" placeholder="john@company.com" class="premium-input" required>
                     </div>
                     <div class="form-input-anim">
                         <label id="label-phone" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Teléfono</label>
-                        <input type="tel" placeholder="+1 (555) 000-0000" class="premium-input">
+                        <input type="tel" name="telefono" placeholder="+1 (555) 000-0000" class="premium-input">
                     </div>
                     <div class="form-input-anim">
                         <label id="label-subject" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Asunto / Presupuesto</label>
-                        <input id="input-subject" type="text" placeholder="Diseño de App / $10k+" class="premium-input">
+                        <input id="input-subject" type="text" name="asunto" placeholder="Diseño de App / $10k+" class="premium-input">
                     </div>
                 </div>
+                <!-- Mensaje de éxito (oculto por defecto) -->
+                <div id="form-success" class="hidden text-center py-4">
+                    <p class="text-green-400 font-inter font-medium tracking-wide">✓ Mensaje enviado — te contacto pronto.</p>
+                </div>
                 <div class="pt-8 flex justify-end form-input-anim">
-                    <button id="btn-send" type="button" class="px-10 py-5 bg-white text-dark rounded-full font-inter font-bold hover:bg-accent hover:text-white transition-colors duration-300 uppercase tracking-widest text-sm">
+                    <button id="btn-send" type="submit" class="px-10 py-5 bg-white text-dark rounded-full font-inter font-bold hover:bg-accent hover:text-white transition-colors duration-300 uppercase tracking-widest text-sm">
                         Enviar Mensaje
                     </button>
                 </div>
@@ -663,6 +671,52 @@
                 lenis.start();
             }});
         });
+
+        // --- FORMSPREE SUBMIT ---
+        const contactForm = document.getElementById('contact-form');
+        const formSuccess = document.getElementById('form-success');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-send');
+            btn.textContent = 'Enviando...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: new FormData(contactForm),
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    contactForm.reset();
+                    // Ocultar campos, mostrar éxito
+                    contactForm.querySelectorAll('.form-input-anim').forEach(el => el.style.display = 'none');
+                    formSuccess.classList.remove('hidden');
+                    btn.textContent = 'Enviado ✓';
+                    btn.classList.remove('bg-white', 'text-dark');
+                    btn.classList.add('bg-accent', 'text-white');
+                } else {
+                    btn.textContent = 'Error — intenta de nuevo';
+                    btn.disabled = false;
+                }
+            } catch {
+                btn.textContent = 'Error — intenta de nuevo';
+                btn.disabled = false;
+            }
+        });
+
+        // Resetear el form al cerrar el modal
+        document.getElementById('close-contact').addEventListener('click', () => {
+            contactForm.querySelectorAll('.form-input-anim').forEach(el => el.style.display = '');
+            formSuccess.classList.add('hidden');
+            const btn = document.getElementById('btn-send');
+            btn.textContent = 'Enviar Mensaje';
+            btn.disabled = false;
+            btn.classList.add('bg-white', 'text-dark');
+            btn.classList.remove('bg-accent', 'text-white');
+        }, { once: false });
     </script>
 
     <!-- SCRIPT 2: THREE.JS (Aislado) -->
@@ -720,120 +774,25 @@
         }
     </script>
 
-    <!-- Language Switcher -->
+    <!-- Google Translate (invisible) -->
+    <div id="google_translate_element" style="display:none"></div>
     <script>
-        const translations = {
-            es: {
-                // Hero
-                'hero-line-1': 'Senior',
-                'hero-line-2': 'Product',
-                'hero-line-3': 'Designer',
-                'hero-desc-1': 'Elevando productos digitales mediante',
-                'hero-desc-2': 'Design Systems',
-                'hero-desc-3': 'e interfaces potenciadas por',
-                'hero-desc-4': 'Inteligencia Artificial.',
-                // About
-                'about-title': 'El diseño no es <br>solo cómo se ve, <br><span class="text-accent italic">es cómo funciona.</span>',
-                'about-desc': 'Con más de 8 años de experiencia, conecto    la brecha entre la estética pura y el rendimiento técnico. Ayudo a startups y empresas Fortune 500 a escalar sus ecosistemas digitales.',
-                'about-stat-1-label': 'Proyectos',
-                'about-stat-2-label': 'Años Exp.',
-                'about-brands': 'Marcas con las que he trabajado',
-                // Portfolio
-                'portfolio-title': 'Proyectos destacados',
-                'portfolio-desc': 'Diseñando productos digitales en proptech, ciberseguridad, telecomunicaciones y más — siempre con un enfoque centrado en el usuario y potenciado por inteligencia artificial.',
-                // Footer / modal
-                'modal-title': 'Nuevos Proyectos',
-                'label-name': 'Nombre completo',
-                'label-email': 'Email',
-                'label-phone': 'Teléfono',
-                'label-subject': 'Asunto / Presupuesto',
-                'placeholder-subject': 'Diseño de App / $10k+',
-                'btn-send': 'Enviar Mensaje',
-                'footer-available': 'Available for work',
-                'footer-cta-sub': 'Click to start a project',
-            },
-            en: {
-                // Hero
-                'hero-line-1': 'Senior',
-                'hero-line-2': 'Product',
-                'hero-line-3': 'Designer',
-                'hero-desc-1': 'Elevating digital products through',
-                'hero-desc-2': 'Design Systems',
-                'hero-desc-3': 'and interfaces powered by',
-                'hero-desc-4': 'Artificial Intelligence.',
-                // About
-                'about-title': 'Design is not <br>just how it looks, <br><span class="text-accent italic">it\'s how it works.</span>',
-                'about-desc': 'With over 8 years of experience, I bridge the gap between pure aesthetics and technical performance. I help startups and Fortune 500 companies scale their digital ecosystems.',
-                'about-stat-1-label': 'Projects',
-                'about-stat-2-label': 'Yrs. Exp.',
-                'about-brands': 'Brands I\'ve worked with',
-                // Portfolio
-                'portfolio-title': 'Featured Projects',
-                'portfolio-desc': 'Designing digital products in proptech, cybersecurity, telecommunications and more — always with a user-centered approach powered by artificial intelligence.',
-                // Footer / modal
-                'modal-title': 'New Projects',
-                'label-name': 'Full name',
-                'label-email': 'Email',
-                'label-phone': 'Phone',
-                'label-subject': 'Subject / Budget',
-                'placeholder-subject': 'App Design / $10k+',
-                'btn-send': 'Send Message',
-                'footer-available': 'Available for work',
-                'footer-cta-sub': 'Click to start a project',
-            }
-        };
-
-        let currentLang = 'es';
-
-        function applyTranslation(lang) {
-            const t = translations[lang];
-
-            // Hero lines
-            document.getElementById('hero-line-1').textContent = t['hero-line-1'];
-            document.getElementById('hero-line-2').textContent = t['hero-line-2'];
-            document.getElementById('hero-line-3').textContent = t['hero-line-3'];
-            document.getElementById('hero-desc-1').textContent = t['hero-desc-1'];
-            document.getElementById('hero-desc-2').textContent = t['hero-desc-2'];
-            document.getElementById('hero-desc-3').textContent = t['hero-desc-3'];
-            document.getElementById('hero-desc-4').textContent = t['hero-desc-4'];
-
-            // About
-            document.getElementById('about-title').innerHTML = t['about-title'];
-            document.getElementById('about-desc').textContent = t['about-desc'];
-            document.getElementById('about-stat-1-label').textContent = t['about-stat-1-label'];
-            document.getElementById('about-stat-2-label').textContent = t['about-stat-2-label'];
-            document.getElementById('about-brands').textContent = t['about-brands'];
-
-            // Portfolio
-            document.getElementById('portfolio-title').textContent = t['portfolio-title'];
-            document.getElementById('portfolio-desc').textContent = t['portfolio-desc'];
-
-            // Modal
-            document.getElementById('modal-title').textContent = t['modal-title'];
-            document.getElementById('label-name').textContent = t['label-name'];
-            document.getElementById('label-email').textContent = t['label-email'];
-            document.getElementById('label-phone').textContent = t['label-phone'];
-            document.getElementById('label-subject').textContent = t['label-subject'];
-            document.getElementById('input-subject').placeholder = t['placeholder-subject'];
-            document.getElementById('btn-send').textContent = t['btn-send'];
-
-            // Footer
-            document.getElementById('footer-cta-sub').textContent = t['footer-cta-sub'];
-
-            // Button flag
-            const btn = document.getElementById('lang-toggle');
-            btn.textContent = lang === 'es' ? '🇪🇸' : '🇺🇸';
-            btn.title = lang === 'es' ? 'Translate to English' : 'Traducir al Español';
-
-            // html lang attr
-            document.documentElement.lang = lang;
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'es', autoDisplay: false }, 'google_translate_element');
         }
-
-        function cambiarIdioma() {
-            currentLang = currentLang === 'es' ? 'en' : 'es';
-            applyTranslation(currentLang);
+        function toggleLanguage() {
+            const btn = document.getElementById('lang-toggle');
+            const select = document.querySelector('.goog-te-combo');
+            const isES = btn.textContent.includes('🇪🇸');
+            if (select) {
+                select.value = isES ? 'en' : '';
+                select.dispatchEvent(new Event('change'));
+            }
+            btn.textContent = isES ? '🇺🇸' : '🇪🇸';
+            btn.title = isES ? 'Traducir al Español' : 'Translate to English';
         }
     </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <!-- Custom Cursor -->
     <script>

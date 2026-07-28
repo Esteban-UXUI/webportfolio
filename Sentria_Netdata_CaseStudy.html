@@ -920,22 +920,25 @@
         })();
     </script>
 
-    <!-- Language Switcher -->
+    <!-- Google Translate (invisible) -->
+    <div id="google_translate_element" style="display:none"></div>
     <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'es', autoDisplay: false }, 'google_translate_element');
+        }
         function toggleLanguage() {
             const btn = document.getElementById('lang-toggle');
+            const select = document.querySelector('.goog-te-combo');
             const isES = btn.textContent.includes('🇪🇸');
-            if (isES) {
-                document.documentElement.lang = 'en';
-                btn.textContent = '🇺🇸';
-                btn.title = 'Traducir al Español';
-            } else {
-                document.documentElement.lang = 'es';
-                btn.textContent = '🇪🇸';
-                btn.title = 'Translate to English';
+            if (select) {
+                select.value = isES ? 'en' : '';
+                select.dispatchEvent(new Event('change'));
             }
+            btn.textContent = isES ? '🇺🇸' : '🇪🇸';
+            btn.title = isES ? 'Traducir al Español' : 'Translate to English';
         }
     </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
 </html>
