@@ -199,7 +199,7 @@
         <div class="flex items-center gap-4">
 <!-- Language switcher: visual toggle -->
             <div class="lang-switcher bg-[#1A1A1D]/50 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/10 flex items-center">
-                <button id="lang-toggle" class="text-sm leading-none px-1.5 py-0.5 rounded-full hover:bg-white/10 transition-colors" style="font-size: 18px;">🇪🇸</button>
+                <button id="lang-toggle" onclick="cambiarIdioma()" class="text-sm leading-none px-1.5 py-0.5 rounded-full hover:bg-white/10 transition-colors" style="font-size: 18px;" title="Translate to English">🇪🇸</button>
             </div>
             <div class="flex items-center gap-3 bg-[#1A1A1D]/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-white">
                 <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -721,18 +721,137 @@
         }
     </script>
 
+    <!-- Language Switcher -->
+    <script>
+        const translations = {
+            es: {
+                // Hero
+                'hero-line-1': 'Senior',
+                'hero-line-2': 'Product',
+                'hero-line-3': 'Designer',
+                'hero-desc-1': 'Elevando productos digitales mediante',
+                'hero-desc-2': 'Design Systems',
+                'hero-desc-3': 'e interfaces potenciadas por',
+                'hero-desc-4': 'Inteligencia Artificial.',
+                // About
+                'about-title': 'El diseño no es <br>solo cómo se ve, <br><span class="text-accent italic">es cómo funciona.</span>',
+                'about-desc': 'Con más de 8 años de experiencia, conecto    la brecha entre la estética pura y el rendimiento técnico. Ayudo a startups y empresas Fortune 500 a escalar sus ecosistemas digitales.',
+                'about-stat-1-label': 'Proyectos',
+                'about-stat-2-label': 'Años Exp.',
+                'about-brands': 'Marcas con las que he trabajado',
+                // Portfolio
+                'portfolio-title': 'Proyectos destacados',
+                'portfolio-desc': 'Diseñando productos digitales en proptech, ciberseguridad, telecomunicaciones y más — siempre con un enfoque centrado en el usuario y potenciado por inteligencia artificial.',
+                // Footer / modal
+                'modal-title': 'Nuevos Proyectos',
+                'label-name': 'Nombre completo',
+                'label-email': 'Email',
+                'label-phone': 'Teléfono',
+                'label-subject': 'Asunto / Presupuesto',
+                'placeholder-subject': 'Diseño de App / $10k+',
+                'btn-send': 'Enviar Mensaje',
+                'footer-available': 'Available for work',
+                'footer-cta-sub': 'Click to start a project',
+            },
+            en: {
+                // Hero
+                'hero-line-1': 'Senior',
+                'hero-line-2': 'Product',
+                'hero-line-3': 'Designer',
+                'hero-desc-1': 'Elevating digital products through',
+                'hero-desc-2': 'Design Systems',
+                'hero-desc-3': 'and interfaces powered by',
+                'hero-desc-4': 'Artificial Intelligence.',
+                // About
+                'about-title': 'Design is not <br>just how it looks, <br><span class="text-accent italic">it\'s how it works.</span>',
+                'about-desc': 'With over 8 years of experience, I bridge the gap between pure aesthetics and technical performance. I help startups and Fortune 500 companies scale their digital ecosystems.',
+                'about-stat-1-label': 'Projects',
+                'about-stat-2-label': 'Yrs. Exp.',
+                'about-brands': 'Brands I\'ve worked with',
+                // Portfolio
+                'portfolio-title': 'Featured Projects',
+                'portfolio-desc': 'Designing digital products in proptech, cybersecurity, telecommunications and more — always with a user-centered approach powered by artificial intelligence.',
+                // Footer / modal
+                'modal-title': 'New Projects',
+                'label-name': 'Full name',
+                'label-email': 'Email',
+                'label-phone': 'Phone',
+                'label-subject': 'Subject / Budget',
+                'placeholder-subject': 'App Design / $10k+',
+                'btn-send': 'Send Message',
+                'footer-available': 'Available for work',
+                'footer-cta-sub': 'Click to start a project',
+            }
+        };
+
+        let currentLang = 'es';
+
+        function applyTranslation(lang) {
+            const t = translations[lang];
+
+            // Hero lines
+            document.getElementById('hero-line-1').textContent = t['hero-line-1'];
+            document.getElementById('hero-line-2').textContent = t['hero-line-2'];
+            document.getElementById('hero-line-3').textContent = t['hero-line-3'];
+            document.getElementById('hero-desc-1').textContent = t['hero-desc-1'];
+            document.getElementById('hero-desc-2').textContent = t['hero-desc-2'];
+            document.getElementById('hero-desc-3').textContent = t['hero-desc-3'];
+            document.getElementById('hero-desc-4').textContent = t['hero-desc-4'];
+
+            // About
+            document.getElementById('about-title').innerHTML = t['about-title'];
+            document.getElementById('about-desc').textContent = t['about-desc'];
+            document.getElementById('about-stat-1-label').textContent = t['about-stat-1-label'];
+            document.getElementById('about-stat-2-label').textContent = t['about-stat-2-label'];
+            document.getElementById('about-brands').textContent = t['about-brands'];
+
+            // Portfolio
+            document.getElementById('portfolio-title').textContent = t['portfolio-title'];
+            document.getElementById('portfolio-desc').textContent = t['portfolio-desc'];
+
+            // Modal
+            document.getElementById('modal-title').textContent = t['modal-title'];
+            document.getElementById('label-name').textContent = t['label-name'];
+            document.getElementById('label-email').textContent = t['label-email'];
+            document.getElementById('label-phone').textContent = t['label-phone'];
+            document.getElementById('label-subject').textContent = t['label-subject'];
+            document.getElementById('input-subject').placeholder = t['placeholder-subject'];
+            document.getElementById('btn-send').textContent = t['btn-send'];
+
+            // Footer
+            document.getElementById('footer-cta-sub').textContent = t['footer-cta-sub'];
+
+            // Button flag
+            const btn = document.getElementById('lang-toggle');
+            btn.textContent = lang === 'es' ? '🇪🇸' : '🇺🇸';
+            btn.title = lang === 'es' ? 'Translate to English' : 'Traducir al Español';
+
+            // html lang attr
+            document.documentElement.lang = lang;
+        }
+
+        function cambiarIdioma() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            applyTranslation(currentLang);
+        }
+    </script>
+
     <!-- Magic Mouse Pointer -->
     <script src="https://cdn.jsdelivr.net/npm/magicmouse.js/dist/magicmouse.min.js"></script>
     <script>
-        const options = {
-            "outerStyle": "circle",
-            "hoverEffect": "pointer-blur",
-            "hoverItemMove": false,
-            "defaultCursor": true,
-            "outerWidth": 41,
-            "outerHeight": 41
-        };
-        magicMouse(options);
+        try {
+            const options = {
+                "outerStyle": "circle",
+                "hoverEffect": "pointer-blur",
+                "hoverItemMove": false,
+                "defaultCursor": false,
+                "outerWidth": 30,
+                "outerHeight": 30
+            };
+            magicMouse(options);
+        } catch (e) {
+            console.warn("Magic Mouse init falló:", e);
+        }
     </script>
 
 </body>

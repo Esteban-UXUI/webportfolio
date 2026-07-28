@@ -374,15 +374,19 @@
     <!-- Magic Mouse Pointer -->
     <script src="https://cdn.jsdelivr.net/npm/magicmouse.js/dist/magicmouse.min.js"></script>
     <script>
-        const options = {
-            "outerStyle": "circle",
-            "hoverEffect": "pointer-blur",
-            "hoverItemMove": false,
-            "defaultCursor": true,
-            "outerWidth": 41,
-            "outerHeight": 41
-        };
-        magicMouse(options);
+        try {
+            const options = {
+                "outerStyle": "circle",
+                "hoverEffect": "pointer-blur",
+                "hoverItemMove": false,
+                "defaultCursor": false,
+                "outerWidth": 30,
+                "outerHeight": 30
+            };
+            magicMouse(options);
+        } catch (e) {
+            console.warn("Magic Mouse init falló:", e);
+        }
     </script>
 
 </body>
