@@ -922,6 +922,14 @@
             btn.textContent = isES ? '🇺🇸' : '🇪🇸';
             btn.title = isES ? 'Traducir al Español' : 'Translate to English';
         }
+        // Ocultar barra de Google Translate aunque se inyecte tarde
+        function hideGoogleBar() {
+            const bar = document.querySelector('.goog-te-banner-frame');
+            if (bar) bar.style.display = 'none';
+            document.body.style.top = '0px';
+        }
+        new MutationObserver(hideGoogleBar).observe(document.body, { childList: true, subtree: true });
+        setInterval(hideGoogleBar, 500);
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
