@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magicmouse.js/dist/magicmouse.min.css">
     <script>
         tailwind.config = {
             theme: {
@@ -720,6 +721,19 @@
         }
     </script>
 
+    <!-- Magic Mouse Pointer -->
+    <script src="https://cdn.jsdelivr.net/npm/magicmouse.js/dist/magicmouse.min.js"></script>
+    <script>
+        const options = {
+            "outerStyle": "circle",
+            "hoverEffect": "pointer-blur",
+            "hoverItemMove": false,
+            "defaultCursor": true,
+            "outerWidth": 41,
+            "outerHeight": 41
+        };
+        magicMouse(options);
+    </script>
 
 </body>
 </html>
