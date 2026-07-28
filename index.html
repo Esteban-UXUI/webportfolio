@@ -168,17 +168,10 @@
             width: 72px;
         }
 
-        /* Ocultar la barra de Google Translate */
-        .goog-te-banner-frame.skiptranslate,
-        #google_translate_element,
-        .goog-tooltip,
-        .goog-text-highlight {
-          display: none !important;
-        }
-        body {
-          top: 0px !important;
-          position: static !important;
-        }
+/* Ocultar solo el banner visual de Google Translate sin afectar la traducción */
+        .goog-te-banner-frame { display: none !important; }
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
     </style>
 </head>
 <body class="font-inter selection:bg-accent selection:text-white overflow-hidden">
@@ -729,7 +722,7 @@
             console.warn("Three.js alert:", err);
         }
     </script>
-    <!-- Google Translate hidden element &amp; language switcher logic -->
+    <!-- Google Translate hidden element & language switcher logic -->
     <div id="google_translate_element" style="display:none;"></div>
 
     <script>
@@ -738,10 +731,15 @@
           { pageLanguage: 'es', autoDisplay: false },
           'google_translate_element'
         );
+        // Remove the banner iframe after Google Translate initializes
+        setTimeout(function removeGTBanner() {
+          const frames = document.querySelectorAll('.goog-te-banner-frame, iframe.skiptranslate');
+          frames.forEach(f => { if (f) f.style.display = 'none'; });
+          document.body.style.top = '0px';
+        }, 300);
       }
 
       function getCurrentLang() {
-        // Check cookie for current Google Translate language
         const match = document.cookie.match(/googtrans=\/es\/(\w+)/);
         return match ? match[1] : 'es';
       }
@@ -755,7 +753,6 @@
         location.reload();
       }
 
-      // Set the correct flag on page load based on cookie
       document.addEventListener('DOMContentLoaded', function() {
         const btn = document.getElementById('lang-toggle');
         if (btn) {
@@ -765,6 +762,18 @@
     </script>
 
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script>
+      // Keep polling until the banner is gone
+      (function pollRemoveBanner() {
+        const frames = document.querySelectorAll('.goog-te-banner-frame, iframe.skiptranslate');
+        frames.forEach(f => { if (f) f.style.display = 'none'; });
+        document.body.style.top = '0px';
+        if (frames.length > 0 || document.body.style.top !== '0px') {
+          setTimeout(pollRemoveBanner, 200);
+        }
+      })();
+    </script>
 
 </body>
 </html>
