@@ -168,10 +168,23 @@
             width: 72px;
         }
 
-/* Ocultar solo el banner visual de Google Translate sin afectar la traducción */
+/* Ocultar el banner superior y la burbuja flotante de Google Translate */
         .goog-te-banner-frame { display: none !important; }
         .goog-te-banner-frame.skiptranslate { display: none !important; }
         body { top: 0px !important; }
+        /* Ocultar burbuja flotante y todo el widget visual de Google Translate */
+        .goog-te-gadget-simple,
+        .goog-te-gadget-icon,
+        .goog-te-menu-value,
+        .goog-te-gadget,
+        .goog-te-menu-frame,
+        .goog-te-spinner-pos,
+        #goog-gt-tt,
+        .goog-te-balloon-frame,
+        div[id^="goog-te"],
+        iframe[id^=":"] {
+          display: none !important;
+        }
     </style>
 </head>
 <body class="font-inter selection:bg-accent selection:text-white overflow-hidden">
@@ -764,14 +777,19 @@
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script>
-      // Keep polling until the banner is gone
-      (function pollRemoveBanner() {
-        const frames = document.querySelectorAll('.goog-te-banner-frame, iframe.skiptranslate');
-        frames.forEach(f => { if (f) f.style.display = 'none'; });
+      // Hide ALL Google Translate UI elements while keeping translation engine alive
+      (function killGTUI() {
+        const hide = (sel) => document.querySelectorAll(sel).forEach(el => { 
+          if (el && el.style) el.style.display = 'none'; 
+          if (el && el.remove) el.remove();
+        });
+        hide('.goog-te-banner-frame, iframe.skiptranslate, .goog-te-gadget-simple, .goog-te-menu-frame, .goog-te-gadget, #goog-gt-tt, .goog-te-spinner-pos');
         document.body.style.top = '0px';
-        if (frames.length > 0 || document.body.style.top !== '0px') {
-          setTimeout(pollRemoveBanner, 200);
-        }
+        // Remove any iframe with google translate in src
+        document.querySelectorAll('iframe[src*="translate"]').forEach(f => {
+          if (f.style) f.style.display = 'none';
+        });
+        setTimeout(killGTUI, 300);
       })();
     </script>
 
