@@ -71,17 +71,19 @@
         .stat-num { font-variant-numeric: tabular-nums; }
         .code-block { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; }
 
-        /* Ocultar la barra de Google Translate */
+        /* Ocultar TODO lo de Google Translate */
+        .goog-te-banner-frame,
         .goog-te-banner-frame.skiptranslate,
         #google_translate_element,
         .goog-tooltip,
-        .goog-text-highlight {
-          display: none !important;
-        }
-        body {
-          top: 0px !important;
-          position: static !important;
-        }
+        .goog-text-highlight,
+        .goog-te-ftab-float,
+        .goog-te-menu-frame,
+        .goog-te-gadget,
+        .goog-te-gadget-simple,
+        iframe.goog-te-menu-frame,
+        iframe.goog-te-banner-frame { display: none !important; visibility: hidden !important; }
+        body { top: 0px !important; position: static !important; }
     </style>
 </head>
 <body class="font-inter selection:bg-accent selection:text-white overflow-hidden">
@@ -926,25 +928,57 @@
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({ pageLanguage: 'es', autoDisplay: false }, 'google_translate_element');
         }
+
+        // Flag para pausar el observer mientras el usuario cambia idioma manualmente
+        let _gtUserAction = false;
+
         function toggleLanguage() {
             const btn = document.getElementById('lang-toggle');
-            const select = document.querySelector('.goog-te-combo');
             const isES = btn.textContent.includes('🇪🇸');
-            if (select) {
-                select.value = isES ? 'en' : '';
-                select.dispatchEvent(new Event('change'));
-            }
-            btn.textContent = isES ? '🇺🇸' : '🇪🇸';
-            btn.title = isES ? 'Traducir al Español' : 'Translate to English';
+
+            // Pausar el observer para no interferir con la traducción
+            _gtUserAction = true;
+
+            const tryTranslate = (attempts) => {
+                const select = document.querySelector('.goog-te-combo');
+                if (select) {
+                    select.value = isES ? 'en' : '';
+                    select.dispatchEvent(new Event('change'));
+                    btn.textContent = isES ? '🇺🇸' : '🇪🇸';
+                    btn.title = isES ? 'Traducir al Español' : 'Translate to English';
+                    // Reactivar el observer después de que Google aplique la traducción
+                    setTimeout(() => { _gtUserAction = false; }, 2000);
+                } else if (attempts > 0) {
+                    // El widget aún no está listo, reintentar
+                    setTimeout(() => tryTranslate(attempts - 1), 300);
+                } else {
+                    _gtUserAction = false;
+                }
+            };
+            tryTranslate(10);
         }
+
         // Ocultar barra de Google Translate aunque se inyecte tarde
         function hideGoogleBar() {
-            const bar = document.querySelector('.goog-te-banner-frame');
-            if (bar) bar.style.display = 'none';
-            document.body.style.top = '0px';
+            if (_gtUserAction) return; // No interrumpir una traducción activa del usuario
+            // Ocultar iframe del banner (NO el .skiptranslate genérico que incluye el select)
+            document.querySelectorAll('.goog-te-banner-frame, .goog-te-menu-frame, iframe.goog-te-banner-frame').forEach(el => {
+                el.style.setProperty('display', 'none', 'important');
+                el.style.setProperty('visibility', 'hidden', 'important');
+            });
+            // Evitar que Google desplace el body hacia abajo
+            document.body.style.setProperty('top', '0px', 'important');
+            document.body.style.setProperty('position', 'static', 'important');
+            // Ocultar iframes de Google Translate por src
+            document.querySelectorAll('iframe').forEach(f => {
+                if (f.src && (f.src.includes('translate.google') || f.src.includes('google.com/translate'))) {
+                    f.style.setProperty('display', 'none', 'important');
+                }
+            });
         }
-        new MutationObserver(hideGoogleBar).observe(document.body, { childList: true, subtree: true });
-        setInterval(hideGoogleBar, 500);
+        const _gtObserver = new MutationObserver(hideGoogleBar);
+        _gtObserver.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+        setInterval(hideGoogleBar, 300);
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
