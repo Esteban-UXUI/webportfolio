@@ -10,7 +10,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magicmouse.js/dist/magicmouse.min.css">
     <script>
         tailwind.config = {
             theme: {
@@ -435,24 +434,24 @@
             <form class="space-y-10">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div class="form-input-anim">
-                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Nombre completo</label>
+                        <label id="label-name" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Nombre completo</label>
                         <input type="text" placeholder="John Doe" class="premium-input">
                     </div>
                     <div class="form-input-anim">
-                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Email</label>
+                        <label id="label-email" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Email</label>
                         <input type="email" placeholder="john@company.com" class="premium-input">
                     </div>
                     <div class="form-input-anim">
-                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Teléfono</label>
+                        <label id="label-phone" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Teléfono</label>
                         <input type="tel" placeholder="+1 (555) 000-0000" class="premium-input">
                     </div>
                     <div class="form-input-anim">
-                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Asunto / Presupuesto</label>
-                        <input type="text" placeholder="Diseño de App / $10k+" class="premium-input">
+                        <label id="label-subject" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Asunto / Presupuesto</label>
+                        <input id="input-subject" type="text" placeholder="Diseño de App / $10k+" class="premium-input">
                     </div>
                 </div>
                 <div class="pt-8 flex justify-end form-input-anim">
-                    <button type="button" class="px-10 py-5 bg-white text-dark rounded-full font-inter font-bold hover:bg-accent hover:text-white transition-colors duration-300 uppercase tracking-widest text-sm">
+                    <button id="btn-send" type="button" class="px-10 py-5 bg-white text-dark rounded-full font-inter font-bold hover:bg-accent hover:text-white transition-colors duration-300 uppercase tracking-widest text-sm">
                         Enviar Mensaje
                     </button>
                 </div>
@@ -836,22 +835,92 @@
         }
     </script>
 
-    <!-- Magic Mouse Pointer -->
-    <script src="https://cdn.jsdelivr.net/npm/magicmouse.js/dist/magicmouse.min.js"></script>
+    <!-- Custom Cursor -->
     <script>
-        try {
-            const options = {
-                "outerStyle": "circle",
-                "hoverEffect": "pointer-blur",
-                "hoverItemMove": false,
-                "defaultCursor": false,
-                "outerWidth": 30,
-                "outerHeight": 30
-            };
-            magicMouse(options);
-        } catch (e) {
-            console.warn("Magic Mouse init falló:", e);
-        }
+        (function () {
+            // Only on non-touch devices
+            if (window.matchMedia('(hover: none)').matches) return;
+
+            // Inject cursor elements
+            const dot = document.createElement('div');
+            dot.id = 'cursor-dot';
+            const ring = document.createElement('div');
+            ring.id = 'cursor-ring';
+            document.body.appendChild(dot);
+            document.body.appendChild(ring);
+
+            // Inject styles
+            const style = document.createElement('style');
+            style.textContent = `
+                *, *::before, *::after { cursor: none !important; }
+                #cursor-dot {
+                    position: fixed;
+                    top: 0; left: 0;
+                    width: 6px; height: 6px;
+                    background: #fff;
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 999999;
+                    transform: translate(-50%, -50%);
+                    transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
+                    will-change: transform;
+                }
+                #cursor-ring {
+                    position: fixed;
+                    top: 0; left: 0;
+                    width: 32px; height: 32px;
+                    border: 1.5px solid rgba(255,255,255,0.6);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 999998;
+                    transform: translate(-50%, -50%);
+                    will-change: transform;
+                }
+                body.cursor-hover #cursor-dot {
+                    width: 10px; height: 10px;
+                    background: #8B5CF6;
+                }
+                body.cursor-hover #cursor-ring {
+                    width: 48px; height: 48px;
+                    border-color: rgba(139,92,246,0.5);
+                }
+            `;
+            document.head.appendChild(style);
+
+            let mouseX = 0, mouseY = 0;
+            let ringX = 0, ringY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                // Dot follows instantly
+                gsap.set(dot, { x: mouseX, y: mouseY });
+            });
+
+            // Ring follows with lag
+            function animateRing() {
+                ringX += (mouseX - ringX) * 0.12;
+                ringY += (mouseY - ringY) * 0.12;
+                gsap.set(ring, { x: ringX, y: ringY });
+                requestAnimationFrame(animateRing);
+            }
+            animateRing();
+
+            // Hover state on interactive elements
+            const hoverTargets = 'a, button, [role="button"], .project-card, .magnetic-btn, .carousel-dot, .lang-switcher';
+            document.querySelectorAll(hoverTargets).forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+            });
+
+            // Hide ring when leaving window
+            document.addEventListener('mouseleave', () => {
+                gsap.to([dot, ring], { opacity: 0, duration: 0.2 });
+            });
+            document.addEventListener('mouseenter', () => {
+                gsap.to([dot, ring], { opacity: 1, duration: 0.2 });
+            });
+        })();
     </script>
 
 </body>
