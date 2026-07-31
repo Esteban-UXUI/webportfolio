@@ -71,20 +71,7 @@
         .stat-num { font-variant-numeric: tabular-nums; }
         .code-block { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; }
 
-        /* Ocultar TODO lo de Google Translate */
-        .goog-te-banner-frame,
-        .goog-te-banner-frame.skiptranslate,
-        #google_translate_element,
-        .goog-tooltip,
-        .goog-text-highlight,
-        .goog-te-ftab-float,
-        .goog-te-menu-frame,
-        .goog-te-gadget,
-        .goog-te-gadget-simple,
-        iframe.goog-te-menu-frame,
-        iframe.goog-te-banner-frame { display: none !important; visibility: hidden !important; }
-        body { top: 0px !important; position: static !important; }
-    </style>
+        </style>
 </head>
 <body class="font-inter selection:bg-accent selection:text-white overflow-hidden">
 
@@ -111,10 +98,6 @@
             <span class="text-accent">←</span> Esteban UI
         </a>
         <div class="flex items-center gap-4">
-            <!-- Language switcher: single flag toggles ES/EN -->
-            <div class="lang-switcher bg-[#1A1A1D]/50 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/10 flex items-center">
-                <button id="lang-toggle" onclick="toggleLanguage()" class="text-sm leading-none px-1.5 py-0.5 rounded-full hover:bg-white/10 transition-colors" style="font-size: 18px;">🇪🇸</button>
-            </div>
             <div class="flex items-center gap-3 bg-[#1A1A1D]/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-white">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 <span class="text-sm font-medium font-mono">MDR</span>
