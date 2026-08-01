@@ -25,6 +25,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
 
+    <!-- Swup v2: ultra-liviano (~15KB), intercepta navegación sin recargar la página -->
+    <script src="https://unpkg.com/swup@2.0.19/dist/swup.min.js"></script>
+
 
     <style>
         body {
@@ -85,9 +88,34 @@
 
         .stat-num { font-variant-numeric: tabular-nums; }
         .swatch { border-radius: 999px; }
+
+        /* ═══ TRANSICIÓN DE PÁGINA MULTICAPA (Swup + GSAP) — SOLO GPU ═══
+           Exclusivamente `transform: translateX()` + `will-change: transform`
+           para que la composición corra en la GPU a 60fps estables. */
+        .page-transition-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999999;      /* por encima de todo (preloader z-99999) */
+            pointer-events: none; /* nunca bloquea clics */
+            will-change: transform; /* promueve a capa GPU dedicada */
+            transform: translateX(-100%); /* ocultas por defecto (GPU) */
+        }
+        .page-transition--purple {
+            background: #8B5CF6;  /* capa 1: púrpura */
+        }
+        .page-transition--reveal {
+            background: #EEE6FC;  /* capa 2: revela el contenido (fondo claro de Fluie) */
+        }
     </style>
 </head>
 <body class="font-inter selection:bg-accent selection:text-white overflow-hidden">
+
+    <!-- Capas de transición Swup (fuera de #swup → persisten entre páginas) -->
+    <div class="page-transition-layer page-transition--purple"></div>
+    <div class="page-transition-layer page-transition--reveal"></div>
 
     <!-- PRELOADER -->
     <div id="preloader" class="fixed inset-0 z-[99999] flex flex-col items-center justify-center" style="background: linear-gradient(160deg, #EEE6FC 0%, #FCE9F1 100%);">
@@ -105,6 +133,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Contenido intercambiable por Swup (el preloader queda FUERA para reproducirse solo en la 1ª carga) -->
+    <div id="swup">
 
     <!-- HEADER -->
     <header class="fixed top-0 w-full z-40 flex justify-between items-center px-8 py-6 opacity-0" id="header">
@@ -664,8 +695,10 @@
     </div>
 
     <!-- SCRIPT 1: LOADER & INTERFAZ (mismo patrón reutilizado) -->
-    <script>
-        const lenis = new Lenis({ lerp: 0.05, smoothWheel: true });
+    <script data-swup-reinit>
+// Inicializar Lenis (expuesto globalmente para Swup)
+        window.__lenis = new Lenis({ lerp: 0.05, smoothWheel: true });
+        const lenis = window.__lenis;
         lenis.stop();
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
@@ -749,7 +782,7 @@
     </script>
 
     <!-- SCRIPT 2: Símbolo flotante del hero (reemplaza el módulo Three.js) -->
-    <script>
+    <script data-swup-reinit>
         (function () {
             const symbol = document.getElementById('hero-symbol-svg');
             const glow = document.getElementById('hero-symbol-glow');
@@ -769,9 +802,14 @@
         })();
     </script>
 
-    <!-- Custom Cursor (mismo componente reutilizado) -->
+</div><!-- /#swup -->
+
+    <!-- Custom Cursor (fuera de #swup → persiste entre transiciones) -->
     <script>
         (function () {
+            if (window.__cursorInjected) return;
+            window.__cursorInjected = true;
+
             if (window.matchMedia('(hover: none)').matches) return;
             const dot = document.createElement('div');
             dot.id = 'cursor-dot';
@@ -793,13 +831,22 @@
             let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
             document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; gsap.set(dot, { x: mouseX, y: mouseY }); });
             (function animateRing() { ringX += (mouseX - ringX) * 0.12; ringY += (mouseY - ringY) * 0.12; gsap.set(ring, { x: ringX, y: ringY }); requestAnimationFrame(animateRing); })();
-            document.querySelectorAll('a, button, [role="button"], .node-card, .magnetic-btn, .screen-frame, .img-ref').forEach(el => {
-                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-            });
+
+            window.__updateCursorTheme = function () {
+                document.querySelectorAll('a, button, [role="button"], .node-card, .magnetic-btn, .screen-frame, .img-ref').forEach(el => {
+                    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+                    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+                });
+            };
+            window.__updateCursorTheme();
+
             document.addEventListener('mouseleave', () => gsap.to([dot, ring], { opacity: 0, duration: 0.2 }));
             document.addEventListener('mouseenter', () => gsap.to([dot, ring], { opacity: 1, duration: 0.2 }));
         })();
     </script>
+
+    <!-- Motor de transición multicapa Swup + GSAP -->
+    <script src="files/swup-transition.js"></script>
+
 </body>
 </html>
