@@ -21,21 +21,15 @@
   /* ── 0. GUARD: si Swup no cargó (CDN caído), la web funciona normal ── */
   if (typeof Swup === 'undefined') return;
 
-/* ── 1. INICIALIZAR SWUP v2 ──
+  /* ── 1. INICIALIZAR SWUP v2 ──
      containers : el único contenedor que se intercambia entre páginas.
      animateHistoryBrowsing : aplica la misma transición con back/forward.
      cache : false → siempre trae HTML fresco (evita estilos stale por página). */
-  let swup;
-  try {
-    swup = new Swup({
-      containers: ['#swup'],
-      animateHistoryBrowsing: true,
-      cache: false,
-    });
-  } catch (e) {
-    console.warn('Swup init failed, navigation will work normally:', e);
-    return;
-  }
+  const swup = new Swup({
+    containers: ['#swup'],
+    animateHistoryBrowsing: true,
+    cache: false,
+  });
 
   /* ── 2. REFERENCIAS A LAS CAPAS DE TRANSICIÓN ──
      Capa púrpura  : cubre la pantalla en la salida.
@@ -48,34 +42,17 @@
   const EASE = 'power4.inOut';
   const STAGGER = 0.12;
 
-/* ── 3. SALIDA: las capas cubren la pantalla (vienen desde la izquierda) ── */
+  /* ── 3. SALIDA: las capas cubren la pantalla (vienen desde la izquierda) ── */
   swup.on('animationOutStart', () => {
-    // Safety timeout: si GSAP falla, la navegación continúa igual
-    let done = false;
-    const safety = setTimeout(() => {
-      if (!done) { done = true; swup.trigger('animationOutEnd'); }
-    }, 2000);
+    const tl = gsap.timeline({
+      // Avisamos a Swup SOLO cuando la última capa terminó de cubrir.
+      onComplete: () => swup.trigger('animationOutEnd'),
+    });
 
-    try {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          if (!done) { done = true; clearTimeout(safety); swup.trigger('animationOutEnd'); }
-        },
-      });
-
-      // Si las capas no existen, forzar navegación directa
-      if (!purple || !reveal) {
-        if (!done) { done = true; clearTimeout(safety); swup.trigger('animationOutEnd'); }
-        return;
-      }
-
-      // xPercent se traduce a `transform: translateX(-100%)` → GPU puro.
-      tl.set([purple, reveal], { xPercent: -100 })
-        .to(purple, { xPercent: 0, duration: DUR, ease: EASE })
-        .to(reveal, { xPercent: 0, duration: DUR, ease: EASE }, `-=${DUR - STAGGER}`);
-    } catch (e) {
-      if (!done) { done = true; clearTimeout(safety); swup.trigger('animationOutEnd'); }
-    }
+    // xPercent se traduce a `transform: translateX(-100%)` → GPU puro.
+    tl.set([purple, reveal], { xPercent: -100 })
+      .to(purple, { xPercent: 0, duration: DUR, ease: EASE })
+      .to(reveal, { xPercent: 0, duration: DUR, ease: EASE }, `-=${DUR - STAGGER}`);
   });
 
   /* ── 4. CONTENIDO REEMPLAZADO → re-ejecutar los scripts de la página entrante ──
@@ -110,31 +87,15 @@
     if (window.__updateCursorTheme) window.__updateCursorTheme();
   });
 
-/* ── 5. ENTRADA: retirar las capas escalonadas → revelar la página nueva ──
+  /* ── 5. ENTRADA: retirar las capas escalonadas → revelar la página nueva ──
      Orden: primero sale la capa "reveal" (arriba), luego la púrpura.
      El pequeño solapamiento (STAGGER) da sensación de profundidad. */
   swup.on('animationInStart', () => {
-    let done = false;
-    const safety = setTimeout(() => {
-      if (!done) { done = true; swup.trigger('animationInEnd'); }
-    }, 2000);
+    const tl = gsap.timeline({
+      onComplete: () => swup.trigger('animationInEnd'),
+    });
 
-    try {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          if (!done) { done = true; clearTimeout(safety); swup.trigger('animationInEnd'); }
-        },
-      });
-
-      if (!purple || !reveal) {
-        if (!done) { done = true; clearTimeout(safety); swup.trigger('animationInEnd'); }
-        return;
-      }
-
-      tl.to(reveal, { xPercent: 100, duration: DUR, ease: EASE, delay: 0.05 })
-        .to(purple, { xPercent: 100, duration: DUR, ease: EASE }, `-=${DUR - STAGGER}`);
-    } catch (e) {
-      if (!done) { done = true; clearTimeout(safety); swup.trigger('animationInEnd'); }
-    }
+    tl.to(reveal, { xPercent: 100, duration: DUR, ease: EASE, delay: 0.05 })
+      .to(purple, { xPercent: 100, duration: DUR, ease: EASE }, `-=${DUR - STAGGER}`);
   });
 })();
