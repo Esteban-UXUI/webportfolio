@@ -79,7 +79,7 @@
 
         /* Imagen de referencia (a reemplazar por mockup real) */
         .img-ref { position: relative; border-radius: 1.5rem; overflow: hidden; border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 25px 50px -25px rgba(139,92,246,0.3); }
-        .img-ref img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.9); }
+        .img-ref img, .img-ref video { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.9); }
         .img-ref .ref-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(43,33,64,0.55), rgba(43,33,64,0) 55%); }
         .img-ref .ref-tag { position: absolute; bottom: 14px; left: 14px; z-index: 10; font-size: 11px; letter-spacing: 0.04em; color: white; background: rgba(43,33,64,0.35); backdrop-filter: blur(6px); padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.3); }
 
@@ -477,9 +477,16 @@
             </div>
 
             <div class="fade-up img-ref aspect-video">
-                <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1785778453/FOUNDATIONS_k2r4el.webp" alt="Referencia" />
+                <video
+                    src="https://res.cloudinary.com/dsbdjteyj/video/upload/v1785784527/video_publicar_contenido_lph1id.webm"
+                    autoplay
+                    loop
+                    muted
+                    playsinline
+                    aria-label="Video de publicación de una cápsula en Fluie"
+                ></video>
                 <div class="ref-overlay"></div>
-                <span class="ref-tag">Foundations DS</span>
+                <span class="ref-tag">Publicar una cápsula</span>
             </div>
         </div>
     </section>
@@ -494,14 +501,14 @@
 
             <div class="fade-up grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="img-ref aspect-[4/3]">
-                    <img src="https://picsum.photos/seed/fluie-capsula/900/700" alt="Referencia" />
+                    <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1785778453/FOUNDATIONS_k2r4el.webp" alt="Referencia" />
                     <div class="ref-overlay"></div>
-                    <span class="ref-tag">Reemplazar · Crear cápsula (audio / video / carta)</span>
+                    <span class="ref-tag">Design system - Coponents</span>
                 </div>
                 <div class="img-ref aspect-[4/3]">
-                    <img src="https://picsum.photos/seed/fluie-verificacion/900/700" alt="Referencia" />
+                    <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1785785866/flujos_mobile_wxo7z1.webp" alt="Referencia" />
                     <div class="ref-overlay"></div>
-                    <span class="ref-tag">Reemplazar · Flujo de verificación de ausencia</span>
+                    <span class="ref-tag">Mobile Flow main user</span>
                 </div>
             </div>
 
