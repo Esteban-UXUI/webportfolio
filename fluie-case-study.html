@@ -86,10 +86,10 @@
         .node-card { position: relative; background: rgba(255,255,255,0.6); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.7); border-radius: 1.25rem; }
         .node-card:hover { border-color: #A855F7; }
 
-        .mobile-card-taller { transition: height 0.3s ease; }
+        .mobile-card-taller { transition: transform 0.3s ease; }
         @media (max-width: 767px) {
             .mobile-card-taller {
-                height: calc(100% + 17%);
+                transform: translateY(0);
             }
         }
 
@@ -629,7 +629,7 @@
 
             <!-- MOBILE -->
             <span class="fade-up block text-xs text-[#2B2140]/40 uppercase tracking-widest font-mono mb-5">Mobile</span>
-            <div class="fade-up grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="fade-up grid grid-cols-2 md:grid-cols-4 gap-6 items-start">
                 <div class="img-ref aspect-[9/16] mobile-card-taller">
                     <img src="https://res.cloudinary.com/dsbdjteyj/image/upload/v1785794778/1_h2wtmg.webp" alt="Referencia" />
                     <div class="ref-overlay"></div>
