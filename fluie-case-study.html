@@ -89,7 +89,13 @@
         .mobile-card-taller { transition: transform 0.3s ease; }
         @media (max-width: 767px) {
             .mobile-card-taller {
-                transform: translateY(0);
+                aspect-ratio: 9 / 20;
+                min-height: 28rem;
+            }
+            .mobile-card-taller img,
+            .mobile-card-taller video {
+                object-fit: contain;
+                object-position: center;
             }
         }
 
