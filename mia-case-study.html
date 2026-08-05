@@ -31,7 +31,7 @@
     <script src="https://unpkg.com/swup@2.0.19/dist/swup.min.js"></script>
 
     <style>
-        body { background-color: #0B0B0C; color: #F8F9FA; margin: 0; overflow-x: hidden; }
+        body { background: linear-gradient(135deg, #f7f9ff 0%, #eef4ff 35%, #fdf8f2 100%); color: #14213d; margin: 0; overflow-x: hidden; }
         .magnetic-btn { display: inline-flex; cursor: pointer; }
         #mia-lottie-pos { position: absolute; top: 50%; right: 6%; transform: translateY(-50%); width: 40vw; max-width: 600px; aspect-ratio: 1 / 1; z-index: 0; pointer-events: none; }
         @media (max-width: 768px) { #mia-lottie-pos { width: 52vw; max-width: 190px; right: 50%; transform: translate(50%, -50%); opacity: 0.5; } }
@@ -49,24 +49,28 @@
         ::-webkit-scrollbar { display: none; }
 
         .premium-input {
-            width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding: 12px 0; color: white; font-family: 'Google Sans', sans-serif; transition: all 0.3s ease;
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(20,33,61,0.2);
+            padding: 12px 0; color: #14213d; font-family: 'Google Sans', sans-serif; transition: all 0.3s ease;
         }
         .premium-input:focus { outline: none; border-bottom-color: #3B82F6; }
-        .premium-input::placeholder { color: rgba(255,255,255,0.4); }
+        .premium-input::placeholder { color: rgba(20,33,61,0.45); }
+        .premium-input:-webkit-autofill {
+            -webkit-text-fill-color: #14213d;
+            box-shadow: 0 0 0px 1000px transparent inset;
+        }
 
         .blinking-cursor::after { content: '_'; animation: blink 1s step-end infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         /* Transición del header glass */
         header { transition: background 0.5s ease, backdrop-filter 0.5s ease, border-bottom 0.5s ease, mix-blend-mode 0.5s ease; }
-        header.header-glass { background: rgba(11, 11, 12, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); mix-blend-mode: normal; }
+        header.header-glass { background: rgba(255,255,255,0.72); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(20,33,61,0.08); mix-blend-mode: normal; }
 
         /* Placeholder de imágenes / mockups */
         .img-placeholder {
             position: relative;
-            border: 1px dashed rgba(255,255,255,0.18);
-            background: repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 12px);
+            border: 1px dashed rgba(20,33,61,0.16);
+            background: repeating-linear-gradient(135deg, rgba(59,130,246,0.05) 0px, rgba(59,130,246,0.05) 2px, transparent 2px, transparent 12px);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             gap: 10px; border-radius: 16px; overflow: hidden; transition: border-color 0.4s ease, background 0.4s ease;
         }
@@ -81,6 +85,36 @@
         .img-placeholder video {
             object-fit: cover;
             object-position: center;
+        }
+
+        /* Light mode overrides para toda la página */
+        body .bg-dark {
+            background: rgba(255,255,255,0.9) !important;
+            color: #14213d !important;
+        }
+        body .bg-surface {
+            background: rgba(255,255,255,0.72) !important;
+            color: #14213d !important;
+        }
+        body .text-white,
+        body .text-white\/30,
+        body .text-white\/10 {
+            color: #14213d !important;
+        }
+        body .text-gray-400,
+        body .text-gray-500,
+        body .text-gray-300 {
+            color: rgba(20,33,61,0.7) !important;
+        }
+        body .border-white\/10,
+        body .border-white\/5 {
+            border-color: rgba(20,33,61,0.12) !important;
+        }
+        .img-placeholder .ph-label {
+            color: rgba(20,33,61,0.6) !important;
+        }
+        .img-placeholder:hover .ph-label {
+            color: rgba(20,33,61,0.8) !important;
         }
 
         @media (max-width: 768px) {
@@ -109,10 +143,10 @@
             transform: translateX(-100%); /* ocultas por defecto (GPU) */
         }
         .page-transition--purple {
-            background: #8B5CF6;  /* capa 1: púrpura */
+            background: #8B5CF6;
         }
         .page-transition--reveal {
-            background: #0B0B0C;  /* capa 2: revela el contenido nuevo */
+            background: #f7f9ff;
         }
 
         </style>
@@ -124,16 +158,16 @@
     <div class="page-transition-layer page-transition--reveal"></div>
 
     <!-- PRELOADER TECNOLÓGICO -->
-    <div id="preloader" class="fixed inset-0 z-[99999] bg-dark flex flex-col items-center justify-center">
+    <div id="preloader" class="fixed inset-0 z-[99999] bg-[#f7f9ff] flex flex-col items-center justify-center">
         <div class="w-full max-w-sm px-8">
             <div class="flex justify-between items-end mb-4 font-inter font-bold">
-                <span class="text-3xl text-white">MIA.</span>
-                <span id="loader-percentage" class="text-5xl text-white leading-none">0%</span>
+                <span class="text-3xl text-[#14213d]">MIA.</span>
+                <span id="loader-percentage" class="text-5xl text-[#14213d] leading-none">0%</span>
             </div>
-            <div class="w-full h-[2px] bg-white/10 overflow-hidden relative">
+            <div class="w-full h-[2px] bg-[#14213d]/10 overflow-hidden relative">
                 <div id="loader-progress" class="absolute top-0 left-0 h-full bg-accent w-0"></div>
             </div>
-            <div class="mt-4 text-xs font-inter text-gray-500 uppercase tracking-widest flex justify-between">
+            <div class="mt-4 text-xs font-inter text-[#14213d]/60 uppercase tracking-widest flex justify-between">
                 <span id="loader-text" class="blinking-cursor">Cargando portafolio</span>
                 <span>CASE_STUDY</span>
             </div>
@@ -144,12 +178,12 @@
     <div id="swup">
 
     <!-- HEADER -->
-    <header class="fixed top-0 w-full z-40 flex justify-between items-center px-8 py-6 mix-blend-difference opacity-0" id="header">
-        <a href="index.html" class="font-inter font-bold text-xl tracking-tighter text-white flex items-center gap-3">
+    <header class="fixed top-0 w-full z-40 flex justify-between items-center px-8 py-6 opacity-0" id="header">
+        <a href="index.html" class="font-inter font-bold text-xl tracking-tighter text-[#14213d] flex items-center gap-3">
             <span>←</span> Esteban UI
         </a>
         <div class="flex items-center gap-4">
-            <div class="flex items-center gap-3 bg-[#1A1A1D]/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-white">
+            <div class="flex items-center gap-3 bg-white/70 backdrop-blur-md px-4 py-2 rounded-full border border-[#14213d]/10 text-[#14213d]">
                 <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
                 <span class="text-sm font-medium">Case Study · Proptech</span>
             </div>
@@ -164,37 +198,37 @@
             </div>
         </div>
         <div class="relative z-10 max-w-6xl">
-            <p class="text-xs md:text-sm uppercase tracking-[0.3em] text-gray-500 mb-6 overflow-hidden">
+            <p class="text-xs md:text-sm uppercase tracking-[0.3em] text-[#14213d]/60 mb-6 overflow-hidden">
                 <span class="inline-block reveal-text translate-y-[150%]">Case Study · Ciencuadras · Grupo Bolívar · 2023—2025</span>
             </p>
-            <h1 class="font-inter text-[16vw] md:text-[9vw] leading-none font-extrabold uppercase tracking-tighter mix-blend-difference text-white">
+            <h1 class="font-inter text-[16vw] md:text-[9vw] leading-none font-extrabold uppercase tracking-tighter text-[#14213d]">
                 <div class="overflow-hidden py-2 -my-2"><span class="inline-block reveal-text translate-y-[150%]">MIA</span></div>
             </h1>
-            <p class="mt-4 text-lg md:text-2xl text-gray-400 max-w-2xl font-light">
+            <p class="mt-4 text-lg md:text-2xl text-[#14213d]/70 max-w-2xl font-light">
                 <span class="reveal-text inline-block translate-y-[150%] opacity-0">Motor de</span>
                 <span class="text-accent italic font-medium reveal-text inline-block translate-y-[150%] opacity-0">Inteligencia Artificial</span>
             </p>
-            <p class="mt-8 text-base md:text-lg text-gray-400 max-w-2xl font-light leading-relaxed reveal-text inline-block translate-y-[150%] opacity-0">
+            <p class="mt-8 text-base md:text-lg text-[#14213d]/70 max-w-2xl font-light leading-relaxed reveal-text inline-block translate-y-[150%] opacity-0">
                 Cómo diseñé un sistema de hiperpersonalización que conecta automáticamente al comprador correcto con la propiedad correcta — antes de que él mismo sepa que la está buscando.
             </p>
 
             <!-- Meta grid -->
             <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 border-t border-white/10 pt-8 max-w-4xl about-text">
                 <div>
-                    <span class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">Mi rol</span>
-                    <span class="font-inter text-lg font-bold text-white">Lead UX/UI Designer</span>
+                    <span class="block text-[10px] uppercase tracking-widest text-[#14213d]/60 mb-2">Mi rol</span>
+                    <span class="font-inter text-lg font-bold text-[#14213d]">Lead UX/UI Designer</span>
                 </div>
                 <div>
-                    <span class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">Empresa</span>
-                    <span class="font-inter text-lg font-bold text-white">Imaginamos · Ciencuadras</span>
+                    <span class="block text-[10px] uppercase tracking-widest text-[#14213d]/60 mb-2">Empresa</span>
+                    <span class="font-inter text-lg font-bold text-[#14213d]">Imaginamos · Ciencuadras</span>
                 </div>
                 <div>
-                    <span class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">Duración</span>
-                    <span class="font-inter text-lg font-bold text-white">2 años</span>
+                    <span class="block text-[10px] uppercase tracking-widest text-[#14213d]/60 mb-2">Duración</span>
+                    <span class="font-inter text-lg font-bold text-[#14213d]">2 años</span>
                 </div>
                 <div>
-                    <span class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">Equipo</span>
-                    <span class="font-inter text-lg font-bold text-white">+10 personas</span>
+                    <span class="block text-[10px] uppercase tracking-widest text-[#14213d]/60 mb-2">Equipo</span>
+                    <span class="font-inter text-lg font-bold text-[#14213d]">+10 personas</span>
                 </div>
             </div>
         </div>
@@ -229,7 +263,7 @@
     </section>
 
     <!-- KPIs -->
-    <section class="py-20 px-8 md:px-20 bg-surface relative z-10">
+    <section class="py-20 px-8 md:px-20 bg-white/70 relative z-10">
         <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 kpi-row">
             <div class="border-t border-white/10 pt-6">
                 <span class="block font-inter text-4xl md:text-6xl font-extrabold text-accent">+70%</span>
@@ -251,7 +285,7 @@
     </section>
 
     <!-- 01 CONTEXTO Y PROBLEMA -->
-    <section class="py-32 px-8 md:px-20 bg-dark relative z-10" id="contexto">
+    <section class="py-32 px-8 md:px-20 bg-white/80 relative z-10" id="contexto">
         <div class="max-w-7xl mx-auto">
             <span class="text-accent font-inter font-bold text-sm tracking-widest">01 · CONTEXTO Y PROBLEMA</span>
             <h2 class="font-inter text-3xl md:text-5xl font-bold mt-4 mb-10 max-w-3xl leading-tight about-text">
@@ -302,7 +336,7 @@
     </section>
 
     <!-- 02 DISCOVERY & RESEARCH -->
-    <section class="py-32 px-8 md:px-20 bg-surface relative z-10" id="research">
+    <section class="py-32 px-8 md:px-20 bg-white/70 relative z-10" id="research">
         <div class="max-w-7xl mx-auto">
             <span class="text-accent font-inter font-bold text-sm tracking-widest">02 · DISCOVERY & RESEARCH</span>
             <h2 class="font-inter text-3xl md:text-5xl font-bold mt-4 mb-16 max-w-3xl leading-tight about-text">
@@ -386,7 +420,7 @@
     </section>
 
     <!-- 03 DEFINICIÓN DEL PROBLEMA -->
-    <section class="py-32 px-8 md:px-20 bg-dark relative z-10" id="definicion">
+    <section class="py-32 px-8 md:px-20 bg-white/80 relative z-10" id="definicion">
         <div class="max-w-5xl mx-auto text-center">
             <span class="text-accent font-inter font-bold text-sm tracking-widest">03 · DEFINICIÓN DEL PROBLEMA</span>
             <p class="quote-mark font-inter text-2xl md:text-4xl font-bold leading-snug mt-8 mb-16 about-text">
@@ -412,7 +446,7 @@
     </section>
 
     <!-- 04 ESTRATEGIA & SOLUCIÓN -->
-    <section class="py-32 px-8 md:px-20 bg-surface relative z-10" id="solucion">
+    <section class="py-32 px-8 md:px-20 bg-white/70 relative z-10" id="solucion">
         <div class="max-w-7xl mx-auto">
             <span class="text-accent font-inter font-bold text-sm tracking-widest">04 · ESTRATEGIA & SOLUCIÓN</span>
             <h2 class="font-inter text-3xl md:text-5xl font-bold mt-4 mb-10 max-w-3xl leading-tight about-text">
@@ -463,7 +497,7 @@
     </section>
 
     <!-- 05 PROCESO DE DISEÑO -->
-    <section class="py-32 px-8 md:px-20 bg-dark relative z-10" id="proceso">
+    <section class="py-32 px-8 md:px-20 bg-white/80 relative z-10" id="proceso">
         <div class="max-w-7xl mx-auto">
             <span class="text-accent font-inter font-bold text-sm tracking-widest">05 · PROCESO DE DISEÑO</span>
             <h2 class="font-inter text-3xl md:text-5xl font-bold mt-4 mb-20 max-w-3xl leading-tight about-text">
@@ -557,7 +591,7 @@
     </section>
 
     <!-- 06 RESULTADOS -->
-    <section class="py-32 px-8 md:px-20 bg-surface relative z-10" id="resultados">
+    <section class="py-32 px-8 md:px-20 bg-white/70 relative z-10" id="resultados">
         <div class="max-w-7xl mx-auto">
             <span class="text-accent font-inter font-bold text-sm tracking-widest">06 · RESULTADOS</span>
             <h2 class="font-inter text-3xl md:text-5xl font-bold mt-4 mb-16 max-w-3xl leading-tight about-text">
@@ -604,7 +638,7 @@
     </section>
 
     <!-- 07 APRENDIZAJES -->
-    <section class="py-32 px-8 md:px-20 bg-dark relative z-10" id="aprendizajes">
+    <section class="py-32 px-8 md:px-20 bg-white/80 relative z-10" id="aprendizajes">
         <div class="max-w-7xl mx-auto">
             <span class="text-accent font-inter font-bold text-sm tracking-widest">07 · APRENDIZAJES</span>
             <h2 class="font-inter text-3xl md:text-5xl font-bold mt-4 mb-16 max-w-3xl leading-tight about-text">
@@ -632,7 +666,7 @@
 
     <!-- FOOTER CTA -->
     <!-- FOOTER CTA -->
-    <footer class="relative h-[50vh] flex flex-col items-center justify-center bg-dark overflow-hidden py-20 px-8">
+    <footer class="relative h-[50vh] flex flex-col items-center justify-center bg-white/80 overflow-hidden py-20 px-8">
         <div class="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
         
         <div class="magnetic-btn relative z-10 text-center group" id="open-contact">
@@ -653,38 +687,40 @@
 
     <!-- MODAL DE CONTACTO -->
     <div id="contact-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center">
-        <div class="absolute inset-0 bg-[#0B0B0C]/90 backdrop-blur-xl opacity-0" id="modal-bg"></div>
-        <div class="relative z-10 w-full max-w-3xl px-8 opacity-0 translate-y-10" id="modal-content">
-            <div class="flex justify-between items-center mb-12 border-b border-white/10 pb-6">
-                <h2 class="font-inter text-4xl font-bold text-white">Nuevos Proyectos</h2>
-                <button id="close-contact" class="text-gray-400 hover:text-white text-5xl font-light transition-colors">&times;</button>
-            </div>
+        <div class="absolute inset-0 bg-[#0B0B0C]/75 backdrop-blur-xl opacity-0" id="modal-bg"></div>
+        <div class="relative z-10 w-full max-w-3xl px-4 md:px-8 opacity-0 translate-y-10" id="modal-content">
+            <div class="rounded-[28px] border border-[#14213d]/10 bg-white/95 p-6 shadow-[0_25px_80px_rgba(0,0,0,0.22)] backdrop-blur-md md:p-10">
+                <div class="flex justify-between items-center mb-10 border-b border-[#14213d]/10 pb-6">
+                    <h2 class="font-inter text-3xl md:text-4xl font-bold text-[#14213d]">Nuevos Proyectos</h2>
+                    <button id="close-contact" class="text-[#14213d]/60 hover:text-[#14213d] text-5xl font-light transition-colors">&times;</button>
+                </div>
 
-            <form class="space-y-10">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div class="form-input-anim">
-                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Nombre completo</label>
-                        <input type="text" placeholder="John Doe" class="premium-input">
+                <form class="space-y-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+                        <div class="form-input-anim">
+                            <label class="block text-xs uppercase tracking-widest text-[#14213d]/70 mb-2">Nombre completo</label>
+                            <input type="text" placeholder="John Doe" class="premium-input">
+                        </div>
+                        <div class="form-input-anim">
+                            <label class="block text-xs uppercase tracking-widest text-[#14213d]/70 mb-2">Email</label>
+                            <input type="email" placeholder="john@company.com" class="premium-input">
+                        </div>
+                        <div class="form-input-anim">
+                            <label class="block text-xs uppercase tracking-widest text-[#14213d]/70 mb-2">Teléfono</label>
+                            <input type="tel" placeholder="+1 (555) 000-0000" class="premium-input">
+                        </div>
+                        <div class="form-input-anim">
+                            <label class="block text-xs uppercase tracking-widest text-[#14213d]/70 mb-2">Asunto / Presupuesto</label>
+                            <input type="text" placeholder="Diseño de App / $10k+" class="premium-input">
+                        </div>
                     </div>
-                    <div class="form-input-anim">
-                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Email</label>
-                        <input type="email" placeholder="john@company.com" class="premium-input">
+                    <div class="pt-4 flex justify-end form-input-anim">
+                        <button type="button" class="px-10 py-5 bg-white text-[#14213d] border border-[#14213d]/10 rounded-full font-inter font-bold hover:bg-[#14213d] hover:text-white transition-colors duration-300 uppercase tracking-widest text-sm shadow-lg shadow-[#14213d]/10">
+                            Enviar mensaje
+                        </button>
                     </div>
-                    <div class="form-input-anim">
-                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Teléfono</label>
-                        <input type="tel" placeholder="+1 (555) 000-0000" class="premium-input">
-                    </div>
-                    <div class="form-input-anim">
-                        <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Asunto / Presupuesto</label>
-                        <input type="text" placeholder="Diseño de App / $10k+" class="premium-input">
-                    </div>
-                </div>
-                <div class="pt-8 flex justify-end form-input-anim">
-                    <button type="button" class="px-10 py-5 bg-white text-dark rounded-full font-inter font-bold hover:bg-accent hover:text-white transition-colors duration-300 uppercase tracking-widest text-sm">
-                        Enviar Mensaje
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
